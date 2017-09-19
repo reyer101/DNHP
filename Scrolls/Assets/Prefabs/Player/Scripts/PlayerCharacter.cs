@@ -23,7 +23,7 @@ public class PlayerCharacter : MonoBehaviour {
     Vector3 m_NormalScale, m_CrouchScale;
 
     private float k_GroundedRadius = .5f;
-    private float k_ClimbRadius = .15f;
+    private float k_ClimbRadius = 1.0f;
 
     // Awake
     void Awake () {
@@ -38,7 +38,7 @@ public class PlayerCharacter : MonoBehaviour {
 	// FixedUpdate
 	void FixedUpdate () {
         m_Grounded = false;
-        m_CanClimb = false;
+        m_CanClimb = false;        
         m_Rigidbody2D.gravityScale = 2;       
 
         // Check if player is standing on ground by searching for colliders overlapping radius at bottom of player
@@ -51,7 +51,7 @@ public class PlayerCharacter : MonoBehaviour {
 
         Collider2D[] cColliders = Physics2D.OverlapCircleAll(m_ClimbCheck.position, k_ClimbRadius, m_LayerMask);
         for (int i = 0; i < cColliders.Length; i++)
-        {
+        {          
             if (cColliders[i].gameObject.tag.Contains("Climb"))
             {  
                 Debug.Log("Overlapping object: " + cColliders[i].gameObject.name);
@@ -70,13 +70,13 @@ public class PlayerCharacter : MonoBehaviour {
         if (!crouch)
         {
             m_Rigidbody2D.velocity = new Vector2(horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);
-            gameObject.transform.localScale = m_NormalScale;
-        }  
+            gameObject.transform.localScale = m_NormalScale;                                 
+        }
         else
         {
             m_Rigidbody2D.velocity = new Vector2(horizontal * m_CrouchSpeed, m_Rigidbody2D.velocity.y);
-            gameObject.transform.localScale = m_CrouchScale;            
-        }      
+            gameObject.transform.localScale = m_CrouchScale;
+        }           
              
         if (m_Grounded && jump)
         {            
@@ -96,27 +96,5 @@ public class PlayerCharacter : MonoBehaviour {
         {            
             m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, vertical * m_ClimbSpeed);
         }
-    }
-
-    /* 
-    Name: OnTriggerEnter2D
-    Parameters: Collider 
-    */
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.tag.Contains("Climb")) {
-            m_CanClimb = true;
-        }
-    }
-
-    /* 
-   Name: OnTriggerExit2D
-   Parameters: Collider 
-   */
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.gameObject.tag.Contains("Climb")) {
-            m_CanClimb = false;
-        }
-    }
+    }   
 }

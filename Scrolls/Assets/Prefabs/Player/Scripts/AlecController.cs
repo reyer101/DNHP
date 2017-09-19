@@ -15,13 +15,19 @@ Description: Script for handling player input
 
 // CharacterController
 public class AlecController : MonoBehaviour {
-    private PlayerCharacter m_Player;    
-    private bool m_Jump, m_Crouch;
+    private PlayerCharacter m_Player;
+    private Transform m_CrouchCheck;
     private Vector3 m_CrouchScale, m_NormalScale;
+    private LayerMask m_LayerMask;
+    private bool m_Jump, m_Crouch;
+
+    private float k_CrouchRadius = 1.5f;
 
     // Awake
     void Awake () {
         m_Player = GetComponent<PlayerCharacter>();
+        m_CrouchCheck = transform.Find("ClimbCheck");
+        m_LayerMask = 1;
         m_Crouch = false;                             		
 	}
 	
@@ -34,7 +40,17 @@ public class AlecController : MonoBehaviour {
 
         if (CrossPlatformInputManager.GetButtonDown("Crouch"))
         {
-            m_Crouch = !m_Crouch;         
+            m_Crouch = !m_Crouch;
+            Collider2D[] cColliders = Physics2D.OverlapCircleAll(m_CrouchCheck.position, k_CrouchRadius, m_LayerMask);
+            for (int i = 0; i < cColliders.Length; i++)
+            {
+                Debug.Log("My head is touching: " + cColliders[i].gameObject.name);
+                if (cColliders[i].gameObject != gameObject)
+                {
+                    Debug.Log("Overlapping object stand: " + cColliders[i].gameObject.name);
+                    m_Crouch = true;
+                }
+            }                     
         }         
     }
 

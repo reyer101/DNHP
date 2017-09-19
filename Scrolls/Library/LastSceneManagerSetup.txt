@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scrolls_Tutorial.unity
+- path: Assets/Scenes/Scrolls_Tutorial.unity
   isLoaded: 1
   isActive: 1
