@@ -16,14 +16,13 @@ Description: Script for handling player input
 // CharacterController
 public class AlecController : MonoBehaviour {
     private PlayerCharacter m_Player;    
-    private bool m_Jump, m_Crouched;
+    private bool m_Jump, m_Crouch;
     private Vector3 m_CrouchScale, m_NormalScale;
 
     // Awake
     void Awake () {
-        m_Player = GetComponent<PlayerCharacter>();       
-        m_NormalScale = gameObject.transform.localScale;
-        m_CrouchScale = gameObject.transform.localScale * .667f;                       		
+        m_Player = GetComponent<PlayerCharacter>();
+        m_Crouch = false;                             		
 	}
 	
 	// Update
@@ -33,27 +32,17 @@ public class AlecController : MonoBehaviour {
             m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
         }
 
-        if(CrossPlatformInputManager.GetButtonDown("Crouch"))
+        if (CrossPlatformInputManager.GetButtonDown("Crouch"))
         {
-            Debug.Log("Crouch pressed");
-            if(m_Crouched)
-            {
-                gameObject.transform.localScale = m_NormalScale;
-                m_Crouched = false;
-            } 
-            else
-            {
-                gameObject.transform.localScale = m_CrouchScale;
-                m_Crouched = true;
-            }                        
-        }
+            m_Crouch = !m_Crouch;         
+        }         
     }
 
     // FixedUpdate
     void FixedUpdate()
     {
         float h = CrossPlatformInputManager.GetAxis("Horizontal");
-        m_Player.Move(h, m_Jump);
+        m_Player.Move(h, m_Jump, m_Crouch);
         m_Jump = false;
 
         float v = CrossPlatformInputManager.GetAxis("Vertical");

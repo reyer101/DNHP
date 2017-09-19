@@ -14,12 +14,13 @@ using UnityEngine;
 
 // CharacterController
 public class PlayerCharacter : MonoBehaviour {
-    public float m_MaxSpeed, m_ClimbSpeed, m_JumpForce;    
+    public float m_MaxSpeed, m_ClimbSpeed, m_CrouchSpeed, m_JumpForce;    
     private bool m_Grounded, m_CanClimb;
     private Rigidbody2D m_Rigidbody2D;
     private Transform m_GroundCheck, m_ClimbCheck;
     private CircleCollider2D m_CircleCollider2D;
     private LayerMask m_LayerMask;
+    Vector3 m_NormalScale, m_CrouchScale;
 
     private float k_GroundedRadius = .5f;
     private float k_ClimbRadius = .15f;
@@ -29,6 +30,8 @@ public class PlayerCharacter : MonoBehaviour {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_GroundCheck = transform.Find("GroundCheck");
         m_ClimbCheck = transform.Find("ClimbCheck");
+        m_NormalScale = gameObject.transform.localScale;
+        m_CrouchScale = new Vector3(m_NormalScale[0], m_NormalScale[1] * .667f, m_NormalScale[2]);
         m_LayerMask = 1;        	
 	}
 	
@@ -53,17 +56,28 @@ public class PlayerCharacter : MonoBehaviour {
             {  
                 Debug.Log("Overlapping object: " + cColliders[i].gameObject.name);
                 m_CanClimb = true;
+                m_Rigidbody2D.gravityScale = 0;
             }               
         }
     }
 
     /*
     Name: Move
-    Parameters: float horizontal, bool jump
+    Parameters: float horizontal, bool jump, bool crouch
     */
-    public void Move(float horizontal, bool jump)
-    {        
-        m_Rigidbody2D.velocity = new Vector2(horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);        
+    public void Move(float horizontal, bool jump, bool crouch)
+    {
+        if (!crouch)
+        {
+            m_Rigidbody2D.velocity = new Vector2(horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);
+            gameObject.transform.localScale = m_NormalScale;
+        }  
+        else
+        {
+            m_Rigidbody2D.velocity = new Vector2(horizontal * m_CrouchSpeed, m_Rigidbody2D.velocity.y);
+            gameObject.transform.localScale = m_CrouchScale;            
+        }      
+             
         if (m_Grounded && jump)
         {            
             m_Grounded = false;                
@@ -79,8 +93,7 @@ public class PlayerCharacter : MonoBehaviour {
     {
         Debug.Log("Can climb: " + m_CanClimb);
         if (m_CanClimb)
-        {
-            m_Rigidbody2D.gravityScale = 0;
+        {            
             m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, vertical * m_ClimbSpeed);
         }
     }
