@@ -37,6 +37,14 @@ public class AlecController : MonoBehaviour {
         {
             m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
         }
+        
+        if(CrossPlatformInputManager.GetAxis("Spell") == 1)
+        {
+            float x = Input.GetAxis("RightAnalogHori");
+            float y = Input.GetAxis("RightAnalogVert");
+            float angle = Mathf.Atan2(-y, x) * (180f / Mathf.PI);
+            m_Player.castSpell(Quaternion.AngleAxis(angle, Vector3.forward));
+        }        
 
         if (CrossPlatformInputManager.GetButtonDown("Crouch"))
         {

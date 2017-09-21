@@ -163,6 +163,9 @@
     <Compile Include="Assets\Ferr\Common\Scripts\WebMessager.cs" />
     <Compile Include="Assets\Prefabs\Player\Scripts\AlecController.cs" />
     <Compile Include="Assets\Prefabs\Player\Scripts\PlayerCharacter.cs" />
+    <Compile Include="Assets\Prefabs\Resources\Spells\RightAnalogRotator.cs" />
+    <Compile Include="Assets\Prefabs\Resources\Spells\SpellMover.cs" />
+    <Compile Include="Assets\Prefabs\Torch\Scripts\TorchTrigger.cs" />
     <Compile Include="Assets\ProCamera2D\3rd Party Plugins Support\PlayMakerActions\FsmStateActionProCamera2DBase.cs" />
     <Compile Include="Assets\ProCamera2D\3rd Party Plugins Support\PlayMakerActions\PC2DAddCameraTarget.cs" />
     <Compile Include="Assets\ProCamera2D\3rd Party Plugins Support\PlayMakerActions\PC2DAdjustCameraTargetInfluence.cs" />
