@@ -161,11 +161,6 @@
     <Compile Include="Assets\Ferr\Common\Scripts\SOUtil.cs" />
     <Compile Include="Assets\Ferr\Common\Scripts\Singleton.cs" />
     <Compile Include="Assets\Ferr\Common\Scripts\WebMessager.cs" />
-    <Compile Include="Assets\Prefabs\Player\Scripts\AlecController.cs" />
-    <Compile Include="Assets\Prefabs\Player\Scripts\PlayerCharacter.cs" />
-    <Compile Include="Assets\Prefabs\Resources\Spells\RightAnalogRotator.cs" />
-    <Compile Include="Assets\Prefabs\Resources\Spells\SpellMover.cs" />
-    <Compile Include="Assets\Prefabs\Torch\Scripts\TorchTrigger.cs" />
     <Compile Include="Assets\ProCamera2D\3rd Party Plugins Support\PlayMakerActions\FsmStateActionProCamera2DBase.cs" />
     <Compile Include="Assets\ProCamera2D\3rd Party Plugins Support\PlayMakerActions\PC2DAddCameraTarget.cs" />
     <Compile Include="Assets\ProCamera2D\3rd Party Plugins Support\PlayMakerActions\PC2DAdjustCameraTargetInfluence.cs" />
@@ -262,6 +257,13 @@
     <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\PlaceTargetWithMouse.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
+    <Compile Include="Assets\Scripts\AlecController.cs" />
+    <Compile Include="Assets\Scripts\Enemy.cs" />
+    <Compile Include="Assets\Scripts\GameController.cs" />
+    <Compile Include="Assets\Scripts\PlayerCharacter.cs" />
+    <Compile Include="Assets\Scripts\RightAnalogRotator.cs" />
+    <Compile Include="Assets\Scripts\SpellMover.cs" />
+    <Compile Include="Assets\Scripts\TorchTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\2D Platformer Controller\LICENSE.txt" />
@@ -307,9 +309,6 @@
     <None Include="Assets\ProCamera2D\TransitionFX Textures\README.txt" />
     <None Include="Assets\SampleScenes\Shaders\Skybox-Procedural.shader" />
     <None Include="Assets\Standard Assets\Cameras\CameraGuidelines.txt" />
-    <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
-    <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />
-    <None Include="Assets\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
     <None Include="Assets\Standard Assets\Effects\GlassRefraction\Shaders\GlassStainedBumpDistort.shader" />
     <None Include="Assets\Standard Assets\Effects\ImageEffects\Readme.txt" />
