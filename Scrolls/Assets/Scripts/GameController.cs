@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 /*
@@ -17,17 +18,20 @@ public class GameController : MonoBehaviour {
     public Vector2 currentCheckPoint;
     public GameObject barrierOne, barrierTwo;
     public bool roomOneDone, roomTwoDone;
+    private Text tutText;    
 
 	// Awake
-	void Awake () {
+	void Awake () {        
         roomOneDone = false;
         roomTwoDone = false;	
 	}
 	
 	// Update
 	void Update () {
+        Debug.Log("GameController");
         if(roomOneDone)
         {
+            Debug.Log("Room one done");
             barrierOne.GetComponent<BoxCollider2D>().enabled = false;
         }    
         if(roomTwoDone)
