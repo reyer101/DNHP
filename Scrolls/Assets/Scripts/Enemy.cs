@@ -80,12 +80,12 @@ public class Enemy : MonoBehaviour {
             if (moveDirection == Vector2.right)
             {
                 moveDirection = Vector2.left;
-                sr.flipX = true;
+                sr.flipX = false;
             }
             else
             {
                 moveDirection = Vector2.right;
-                sr.flipX = false;
+                sr.flipX = true;
             }
         }
         transform.Translate(moveDirection * (moveSpeed / 50f));
