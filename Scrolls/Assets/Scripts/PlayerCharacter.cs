@@ -22,8 +22,8 @@ public class PlayerCharacter : MonoBehaviour {
     private Transform m_GroundCheck, m_ClimbCheck;
     private CircleCollider2D m_CircleCollider2D;
     private LayerMask m_LayerMask;
-    Vector3 m_NormalScale, m_CrouchScale;
-    Vector3 m_SpellSpawnPosition;
+    Vector3 m_NormalScale, m_CrouchScale, m_SpellSpawnPosition;
+    Quaternion m_ForwardRotation, m_BackRotation;    
 
     private float lastSpellTime;
     private float k_GroundedRadius = .5f;
@@ -36,7 +36,9 @@ public class PlayerCharacter : MonoBehaviour {
         m_ClimbCheck = transform.Find("ClimbCheck");
         m_NormalScale = gameObject.transform.localScale;
         m_CrouchScale = new Vector3(m_NormalScale[0], m_NormalScale[1] * .667f, m_NormalScale[2]);
-        m_SpellSpawnPosition = transform.Find("SpellSpawner").transform.position;        
+        m_SpellSpawnPosition = transform.Find("SpellSpawner").transform.position;
+        m_ForwardRotation = transform.rotation;        
+        m_BackRotation = new Quaternion(0, m_ForwardRotation.y - 1, 0, 0);          
         m_LayerMask = 1;
         lastSpellTime = -100f;        	
 	}
@@ -74,8 +76,19 @@ public class PlayerCharacter : MonoBehaviour {
     */
     public void Move(float horizontal, bool jump, bool crouch)
     {
-        if (!crouch)
+        if(horizontal < 0)
         {
+            Debug.Log("Back rotation");
+            transform.rotation = m_BackRotation;
+        } 
+        else if(horizontal > 0)
+        {
+            Debug.Log("Forward rotation");
+            transform.rotation = m_ForwardRotation;
+        }      
+
+        if (!crouch)
+        {            
             m_Rigidbody2D.velocity = new Vector2(horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);
             gameObject.transform.localScale = m_NormalScale;                                 
         }
@@ -106,10 +119,11 @@ public class PlayerCharacter : MonoBehaviour {
     }
     
     // castSpell
-    public void castSpell(Quaternion spawnRotation)
+    public void castSpell()
     {
         if((Time.time - lastSpellTime) > m_FireSpellCD)
         {
+            Quaternion spawnRotation = new Quaternion(0, transform.rotation.y, 0, 0);
             GameObject spell = (GameObject)Instantiate(Resources.Load(
             "Spells/FireSpell"), m_SpellSpawnPosition, spawnRotation);
             lastSpellTime = Time.time;
