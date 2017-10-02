@@ -27,11 +27,9 @@ public class GameController : MonoBehaviour {
 	}
 	
 	// Update
-	void Update () {
-        Debug.Log("GameController");
+	void Update () {        
         if(roomOneDone)
-        {
-            Debug.Log("Room one done");
+        {            
             barrierOne.GetComponent<BoxCollider2D>().enabled = false;
         }    
         if(roomTwoDone)

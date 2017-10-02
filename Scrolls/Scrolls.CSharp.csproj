@@ -257,13 +257,13 @@
     <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\PlaceTargetWithMouse.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
-    <Compile Include="Assets\Scripts\AlecController.cs" />
-    <Compile Include="Assets\Scripts\Enemy.cs" />
-    <Compile Include="Assets\Scripts\GameController.cs" />
-    <Compile Include="Assets\Scripts\PlayerCharacter.cs" />
-    <Compile Include="Assets\Scripts\RightAnalogRotator.cs" />
-    <Compile Include="Assets\Scripts\SpellMover.cs" />
-    <Compile Include="Assets\Scripts\TorchTrigger.cs" />
+    <Compile Include="Assets\Scripts\Control\AlecController.cs" />
+    <Compile Include="Assets\Scripts\Control\Enemy.cs" />
+    <Compile Include="Assets\Scripts\Control\GameController.cs" />
+    <Compile Include="Assets\Scripts\Control\PlayerCharacter.cs" />
+    <Compile Include="Assets\Scripts\Control\RightAnalogRotator.cs" />
+    <Compile Include="Assets\Scripts\Control\SpellMover.cs" />
+    <Compile Include="Assets\Scripts\Control\TorchTrigger.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\2D Platformer Controller\LICENSE.txt" />

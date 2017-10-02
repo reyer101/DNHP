@@ -39,24 +39,23 @@ public class AlecController : MonoBehaviour {
         }
         
         if(CrossPlatformInputManager.GetAxis("Spell") == 1)
-        {
-            float x = Input.GetAxis("RightAnalogHori");
-            float y = Input.GetAxis("RightAnalogVert");
-            float angle = Mathf.Atan2(-y, x) * (180f / Mathf.PI);
-            //m_Player.castSpell(Quaternion.AngleAxis(angle, Vector3.forward));
+        {                        
             m_Player.castSpell();
-        }        
+        }
+
+        if (CrossPlatformInputManager.GetAxis("ToggleSpell") == 1)
+        {
+            m_Player.toggleSpell();
+        }
 
         if (CrossPlatformInputManager.GetButtonDown("Crouch"))
         {
             m_Crouch = !m_Crouch;
             Collider2D[] cColliders = Physics2D.OverlapCircleAll(m_CrouchCheck.position, k_CrouchRadius, m_LayerMask);
             for (int i = 0; i < cColliders.Length; i++)
-            {
-                Debug.Log("My head is touching: " + cColliders[i].gameObject.name);
+            {                
                 if (cColliders[i].gameObject != gameObject)
-                {
-                    Debug.Log("Overlapping object stand: " + cColliders[i].gameObject.name);
+                {                    
                     m_Crouch = true;
                 }
             }                     
