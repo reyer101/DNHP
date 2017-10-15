@@ -16,7 +16,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
     GameObject player;    
     private Vector2 moveDirection;
-    private Quaternion fireRotation;
+    private Quaternion fireRotation, forwardRotation, backRotation;
     private GameController gameController;
     private SpriteRenderer sr;
     private LayerMask m_LayerMask;
@@ -29,14 +29,17 @@ public class Enemy : MonoBehaviour {
 	void Awake () {
         lastAttackTime = -999f;
         fireRotation = new Quaternion();
+        forwardRotation = transform.rotation;
+        backRotation = new Quaternion(0, forwardRotation.y - 1, 0, 0);
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         player = GameObject.FindGameObjectWithTag("Player");
         sr = GetComponent<SpriteRenderer>();
         m_LayerMask = 1;
         moveDirection = Vector2.right;
         playerInRange = false;
-        initialPosition = transform.position.x;	
-	}
+        initialPosition = transform.position.x;
+        transform.rotation = forwardRotation;
+    }
     
     // FixedUpdate
     void FixedUpdate()
@@ -48,46 +51,52 @@ public class Enemy : MonoBehaviour {
             if (pColliders[i].gameObject.tag == "Player")
             {
                 playerInRange =  true;
-                Vector2 targetDirection = pColliders[i].gameObject.transform.position - transform.position;
-                Quaternion lookAt = Quaternion.LookRotation(targetDirection);
-                fireRotation = new Quaternion(lookAt.x, lookAt.y, 0, 0);
-                Debug.Log("Player in range");
-            }  
-                           
+                Vector3 diff = pColliders[i].gameObject.transform.position - transform.position;
+                //Quaternion lookAt = Quaternion.LookRotation(
+                //   );
+                float angle = Mathf.Atan2(diff.x, diff.y) * Mathf.Rad2Deg;
+                fireRotation = Quaternion.Euler(new Vector3(0, 0, -angle + 90f));              
+            }                             
         }
     }
 	
 	// Update
 	void Update () {
         player = GameObject.FindGameObjectWithTag("Player");
-
         if(!playerInRange)
         {
             Patrol();
         }
         else
         {
+            FacePlayer();
             Attack();
-        }  
-        
+        }       
     }
 
     // Patrol
     void Patrol()
     {
-        if (Mathf.Abs(transform.position.x - initialPosition) > patrolRadius)
+        if(moveDirection == Vector2.right)
         {
+            sr.flipX = true;
+        }
+        else
+        {
+            sr.flipX = false;
+        }    
+           
+        if (Mathf.Abs(transform.position.x - initialPosition) > patrolRadius)
+        {            
             if (moveDirection == Vector2.right)
             {
-                moveDirection = Vector2.left;
-                sr.flipX = false;
+                moveDirection = Vector2.left;                
             }
             else
             {
-                moveDirection = Vector2.right;
-                sr.flipX = true;
+                moveDirection = Vector2.right;                
             }
-        }
+        }       
         transform.Translate(moveDirection * (moveSpeed / 50f));
     }
 
@@ -97,9 +106,26 @@ public class Enemy : MonoBehaviour {
         if(Time.time - lastAttackTime > attackCD)
         {
             GameObject spell = (GameObject)Instantiate(Resources.Load(
-                "Spells/EnemyProjectile"), transform.position, fireRotation);
+                "Spells/EnemyProjectile"), transform.position, transform.rotation);
+            spell.transform.localRotation = fireRotation;
             lastAttackTime = Time.time;
+            Debug.Log("Fire rotation: " + fireRotation);
         }
+    }
+
+    // FacePlayer
+    void FacePlayer()
+    {
+        Vector3 diff = player.transform.position - transform.position;
+        diff.Normalize();        
+        if(diff.x < 0)
+        {
+            sr.flipX = false;
+        }
+        else
+        {
+            sr.flipX = true;
+        }        
     }
 
     // OnTriggerEnter2D
