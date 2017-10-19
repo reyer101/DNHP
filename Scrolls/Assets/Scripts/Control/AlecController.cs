@@ -71,5 +71,9 @@ public class AlecController : MonoBehaviour {
 
         float v = CrossPlatformInputManager.GetAxis("Vertical");
         m_Player.Climb(v);
+
+        float lh = CrossPlatformInputManager.GetAxis("RightAnalogHori");
+        float lv = CrossPlatformInputManager.GetAxis("RightAnalogVert");        
+        m_Player.MoveLevitationTarget(lh, lv);
     }
 }
