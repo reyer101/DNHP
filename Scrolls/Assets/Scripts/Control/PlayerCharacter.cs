@@ -17,22 +17,25 @@ using UnityEngine.UI;
 
 // PlayerCharacter
 public class PlayerCharacter : MonoBehaviour {
-    public float m_MaxSpeed, m_ClimbSpeed, m_CrouchSpeed, m_JumpForce, m_FireSpellCD;
+    public GameObject m_LevitateTarget;
+    public float m_MaxSpeed, m_ClimbSpeed, m_CrouchSpeed, m_JumpForce, 
+        m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
     public int HP;   
     private bool m_Grounded, m_CanClimb;
     private Rigidbody2D m_Rigidbody2D;
     private Transform m_GroundCheck, m_ClimbCheck;
     private CircleCollider2D m_CircleCollider2D;
-    private LayerMask m_LayerMask;
-    Vector3 m_NormalScale, m_CrouchScale, m_SpellSpawnPosition;
-    Quaternion m_ForwardRotation, m_BackRotation;
+    private LayerMask m_LayerMask;    
+    private Vector3 m_NormalScale, m_CrouchScale, m_SpellSpawnPosition;
+    private Quaternion m_ForwardRotation, m_BackRotation;
     private Text m_SpellText;
 
     private LinkedList<string> m_SpellList;
     private int currentSpellIdx;
-    private float lastSpellTime, lastToggleTime;
+    private float lastFireSpellTime, lastLevitateTime, lastToggleTime;
     private float k_GroundedRadius = .5f;
-    private float k_ClimbRadius = 1.0f;    
+    private float k_ClimbRadius = 1.0f;
+    private float m_LevitateCD = 1f;   
 
     // Awake
     void Awake () {        
@@ -43,12 +46,15 @@ public class PlayerCharacter : MonoBehaviour {
         m_NormalScale = gameObject.transform.localScale;
         m_CrouchScale = new Vector3(m_NormalScale[0], m_NormalScale[1] * .667f, m_NormalScale[2]);
         m_SpellSpawnPosition = transform.Find("SpellSpawner").transform.position;
-        m_ForwardRotation = transform.rotation;        
+        m_ForwardRotation = transform.rotation;              
         m_BackRotation = new Quaternion(0, m_ForwardRotation.y - 1, 0, 0);          
         m_LayerMask = 1;
-        lastSpellTime = -100f;
+        lastFireSpellTime = -100f;
+        lastLevitateTime = -100f;
         lastToggleTime = -100f;
-        m_SpellList = new LinkedList<string>();         
+        m_SpellList = new LinkedList<string>();
+        m_SpellList.AddLast("Fire");
+        m_SpellList.AddLast("Earth");
         currentSpellIdx = 0;
 	}
 	
@@ -122,6 +128,27 @@ public class PlayerCharacter : MonoBehaviour {
             m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, vertical * m_ClimbSpeed);
         }
     }
+
+    public void MoveLevitationTarget(float h, float v)
+    {                
+        if(m_LevitateTarget != null)
+        {
+            Rigidbody2D rb = m_LevitateTarget.GetComponent<Rigidbody2D>();
+            if (!(Mathf.Abs(m_LevitateTarget.transform.position.y - transform.position.y) > m_LevitateRadius
+                || Mathf.Abs(m_LevitateTarget.transform.position.x - transform.position.x) > m_LevitateRadius))
+            {
+                Debug.Log("Levitate target not null???: " + m_LevitateTarget.name);
+                Vector2 direction = new Vector2(h, -v);                
+                rb.velocity = direction * 20f * m_LevitateSpeed * Time.deltaTime;
+            }
+            else
+            {
+                rb.gravityScale = 1;
+                rb.velocity = Vector2.zero;
+                m_LevitateTarget = null;
+            }
+        }            
+    }
     
     // castSpell
     public void castSpell()
@@ -131,16 +158,40 @@ public class PlayerCharacter : MonoBehaviour {
             switch (m_SpellList.ElementAt(currentSpellIdx))
             {
                 case "Fire":
-                    if ((Time.time - lastSpellTime) > m_FireSpellCD)
+                    if ((Time.time - lastFireSpellTime) > m_FireSpellCD)
                     {
                         Quaternion spawnRotation = new Quaternion(0, transform.rotation.y, 0, 0);
                         GameObject spell = (GameObject)Instantiate(Resources.Load(
                             "Spells/FireSpell"), m_SpellSpawnPosition, spawnRotation);
-                        lastSpellTime = Time.time;
+                        lastFireSpellTime = Time.time;
                     }
                     break;
-                case "Water":
-                    Debug.Log("Cast water spell");
+                case "Earth":                    
+                    if((Time.time - lastLevitateTime) > m_LevitateCD)
+                    {
+                        if(m_LevitateTarget == null)
+                        {
+                            Collider2D[] colliders = Physics2D.OverlapCircleAll(
+                                transform.position, m_LevitateRadius, m_LayerMask);
+                            for (int i = 0; i < colliders.Length; ++i)
+                            {
+                                if (colliders[i].gameObject.tag == "Liftable")
+                                {
+                                    Debug.Log("Cast earth spell");
+                                    m_LevitateTarget = colliders[i].gameObject;
+                                    m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
+                                    lastLevitateTime = Time.time;
+                                }
+                            }
+                        }
+                        else
+                        {                            
+                            m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
+                            m_LevitateTarget = null;
+                            lastLevitateTime = Time.time;
+                            Debug.Log("Levitate target null");
+                        }                        
+                    }                    
                     break;
                 // Other spell cases 
             }
@@ -160,7 +211,7 @@ public class PlayerCharacter : MonoBehaviour {
             {
                 currentSpellIdx = 0;                
             }
-            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(currentSpellIdx);
+            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(currentSpellIdx);            
         }
         lastToggleTime = Time.time;        
     }
@@ -182,7 +233,7 @@ public class PlayerCharacter : MonoBehaviour {
         {
             Destroy(other.gameObject);
             m_SpellList.AddLast("Fire");
-            m_SpellList.AddLast("Water");
+            m_SpellList.AddLast("Earth");
             m_SpellText.text = "Spell: " + m_SpellList.ElementAt(0);
         }
     }  
