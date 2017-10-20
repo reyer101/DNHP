@@ -20,14 +20,16 @@ public class PlayerCharacter : MonoBehaviour {
     public GameObject m_LevitateTarget;
     public float m_MaxSpeed, m_ClimbSpeed, m_CrouchSpeed, m_JumpForce, 
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
-    public int HP;   
-    private bool m_Grounded, m_CanClimb;
+    public int HP;
+    public bool m_DropWhenOutOfRange, m_CanLevitateAndMove;    
+    private bool m_Grounded, m_CanClimb;    
     private Rigidbody2D m_Rigidbody2D;
     private Transform m_GroundCheck, m_ClimbCheck;
     private CircleCollider2D m_CircleCollider2D;
     private LayerMask m_LayerMask;    
     private Vector3 m_NormalScale, m_CrouchScale, m_SpellSpawnPosition;
     private Quaternion m_ForwardRotation, m_BackRotation;
+    private Color m_Highlight;
     private Text m_SpellText;
 
     private LinkedList<string> m_SpellList;
@@ -42,6 +44,7 @@ public class PlayerCharacter : MonoBehaviour {
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_GroundCheck = transform.Find("GroundCheck");
         m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();
+        ColorUtility.TryParseHtmlString("#c156f7", out m_Highlight);
         m_ClimbCheck = transform.Find("ClimbCheck");
         m_NormalScale = gameObject.transform.localScale;
         m_CrouchScale = new Vector3(m_NormalScale[0], m_NormalScale[1] * .667f, m_NormalScale[2]);
@@ -90,31 +93,38 @@ public class PlayerCharacter : MonoBehaviour {
     */
     public void Move(float horizontal, bool jump, bool crouch)
     {
-        if(horizontal < 0)
-        {            
-            transform.rotation = m_BackRotation;
-        } 
-        else if(horizontal > 0)
-        {            
-            transform.rotation = m_ForwardRotation;
-        }      
+        if(m_CanLevitateAndMove || (!m_CanLevitateAndMove && m_LevitateTarget == null))
+        {
+            if (horizontal < 0)
+            {
+                transform.rotation = m_BackRotation;
+            }
+            else if (horizontal > 0)
+            {
+                transform.rotation = m_ForwardRotation;
+            }
 
-        if (!crouch)
-        {            
-            m_Rigidbody2D.velocity = new Vector2(horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);
-            gameObject.transform.localScale = m_NormalScale;                                 
+            if (!crouch)
+            {
+                m_Rigidbody2D.velocity = new Vector2(horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);
+                gameObject.transform.localScale = m_NormalScale;
+            }
+            else
+            {
+                m_Rigidbody2D.velocity = new Vector2(horizontal * m_CrouchSpeed, m_Rigidbody2D.velocity.y);
+                gameObject.transform.localScale = m_CrouchScale;
+            }
+
+            if (m_Grounded && jump)
+            {
+                m_Grounded = false;
+                m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+            }
         }
         else
         {
-            m_Rigidbody2D.velocity = new Vector2(horizontal * m_CrouchSpeed, m_Rigidbody2D.velocity.y);
-            gameObject.transform.localScale = m_CrouchScale;
-        }           
-             
-        if (m_Grounded && jump)
-        {            
-            m_Grounded = false;                
-            m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
-        }
+            m_Rigidbody2D.velocity = Vector2.zero;
+        }        
     }
 
     /*
@@ -134,18 +144,25 @@ public class PlayerCharacter : MonoBehaviour {
         if(m_LevitateTarget != null)
         {
             Rigidbody2D rb = m_LevitateTarget.GetComponent<Rigidbody2D>();
-            if (!(Mathf.Abs(m_LevitateTarget.transform.position.y - transform.position.y) > m_LevitateRadius
-                || Mathf.Abs(m_LevitateTarget.transform.position.x - transform.position.x) > m_LevitateRadius))
+            Vector3 direction = new Vector3(h, -v, 0);
+            if (!(Mathf.Abs(m_LevitateTarget.transform.position.y - transform.position.y) >= m_LevitateRadius
+                || Mathf.Abs(m_LevitateTarget.transform.position.x - transform.position.x) >= m_LevitateRadius))
             {
-                Debug.Log("Levitate target not null???: " + m_LevitateTarget.name);
-                Vector2 direction = new Vector2(h, -v);                
+                Debug.Log("Levitate target not null???: " + m_LevitateTarget.name);                                
                 rb.velocity = direction * 20f * m_LevitateSpeed * Time.deltaTime;
             }
             else
             {
-                rb.gravityScale = 1;
                 rb.velocity = Vector2.zero;
-                m_LevitateTarget = null;
+                Vector3 position1 = m_LevitateTarget.transform.position;
+                Vector3 position2 = position1 - .01f * (position1 - transform.position);
+                m_LevitateTarget.transform.position = position2;                                
+                if (m_DropWhenOutOfRange)
+                {
+                    rb.gravityScale = 1;
+                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;                    
+                    m_LevitateTarget = null;
+                }                
             }
         }            
     }
@@ -180,6 +197,7 @@ public class PlayerCharacter : MonoBehaviour {
                                     Debug.Log("Cast earth spell");
                                     m_LevitateTarget = colliders[i].gameObject;
                                     m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
+                                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
                                     lastLevitateTime = Time.time;
                                 }
                             }
@@ -187,6 +205,8 @@ public class PlayerCharacter : MonoBehaviour {
                         else
                         {                            
                             m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
+                            m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                            m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;
                             m_LevitateTarget = null;
                             lastLevitateTime = Time.time;
                             Debug.Log("Levitate target null");
@@ -209,7 +229,14 @@ public class PlayerCharacter : MonoBehaviour {
             }
             else
             {
-                currentSpellIdx = 0;                
+                currentSpellIdx = 0;
+                if(m_LevitateTarget != null)
+                {
+                    m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
+                    m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;
+                    m_LevitateTarget = null;
+                }                           
             }
             m_SpellText.text = "Spell: " + m_SpellList.ElementAt(currentSpellIdx);            
         }
