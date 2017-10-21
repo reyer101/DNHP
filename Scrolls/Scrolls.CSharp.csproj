@@ -409,6 +409,8 @@
     <Compile Include="Assets\Scripts\Control\RightAnalogRotator.cs" />
     <Compile Include="Assets\Scripts\Control\SpellMover.cs" />
     <Compile Include="Assets\Scripts\Control\TorchTrigger.cs" />
+    <Compile Include="Assets\Scripts\CS\forHUD.cs" />
+    <Compile Include="Assets\Scripts\CS\LoadScene.cs" />
     <Compile Include="Assets\Scripts\Utils\Constants.cs" />
   </ItemGroup>
   <ItemGroup>
