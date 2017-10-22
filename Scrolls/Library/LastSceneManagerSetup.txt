@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Scolls_Tutorial2.unity
+- path: Assets/Scenes/PlayerInfo.unity
   isLoaded: 1
   isActive: 1
