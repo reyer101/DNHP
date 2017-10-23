@@ -22,7 +22,7 @@ public class PlayerCharacter : MonoBehaviour {
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
     public int HP;
     public bool m_DropWhenOutOfRange, m_CanLevitateAndMove;    
-    private bool m_Grounded, m_CanClimb;    
+    private bool m_Grounded, m_CanClimb, m_HasSpell;    
     private Rigidbody2D m_Rigidbody2D;
     private Transform m_GroundCheck, m_ClimbCheck;
     private CircleCollider2D m_CircleCollider2D;
@@ -30,7 +30,7 @@ public class PlayerCharacter : MonoBehaviour {
     private Vector3 m_NormalScale, m_CrouchScale, m_SpellSpawnPosition;
     private Quaternion m_ForwardRotation, m_BackRotation;
     private Color m_Highlight;
-    private Text m_SpellText;
+    private Text m_SpellText, m_HPText, m_CDText;
 
     private LinkedList<string> m_SpellList;
     private int currentSpellIdx;
@@ -40,10 +40,14 @@ public class PlayerCharacter : MonoBehaviour {
     private float m_LevitateCD = 1f;   
 
     // Awake
-    void Awake () {        
+    void Awake () {
+        m_HasSpell = false;   
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_GroundCheck = transform.Find("GroundCheck");
         m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();
+        m_HPText = GameObject.FindGameObjectWithTag("HPText").GetComponent<Text>();
+        m_HPText.text = "HP: " + HP;
+        m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();
         ColorUtility.TryParseHtmlString("#c156f7", out m_Highlight);
         m_ClimbCheck = transform.Find("ClimbCheck");
         m_NormalScale = gameObject.transform.localScale;
@@ -55,9 +59,7 @@ public class PlayerCharacter : MonoBehaviour {
         lastFireSpellTime = -100f;
         lastLevitateTime = -100f;
         lastToggleTime = -100f;
-        m_SpellList = new LinkedList<string>();
-        m_SpellList.AddLast("Fire");
-        m_SpellList.AddLast("Earth");
+        m_SpellList = new LinkedList<string>();        
         currentSpellIdx = 0;
 	}
 	
@@ -84,7 +86,36 @@ public class PlayerCharacter : MonoBehaviour {
                 m_CanClimb = true;
                 m_Rigidbody2D.gravityScale = 0;
             }               
-        }
+        } 
+        
+        if(m_HasSpell)
+        {
+            switch (m_SpellList.ElementAt(currentSpellIdx))
+            {
+                case "Fire":
+                    if (m_FireSpellCD - (Time.time - lastFireSpellTime) >= 0)
+                    {
+                        m_CDText.text = "Spell Cooldown: " + (m_FireSpellCD - (
+                            Time.time - lastFireSpellTime)).ToString("0.0");                        
+                    }
+                    else
+                    {
+                        m_CDText.text = "Spell Cooldown: 0";
+                    }
+                    break;
+                case "Earth":
+                    if (m_LevitateCD - (Time.time - lastLevitateTime) >= 0)
+                    {
+                        m_CDText.text = "Spell Cooldown: " + (m_LevitateCD - (
+                            Time.time - lastLevitateTime)).ToString("0.0");
+                    }
+                    else
+                    {
+                        m_CDText.text = "Spell Cooldown: 0";
+                    }
+                    break;
+            }
+        }        
     }
 
     /*
@@ -249,6 +280,7 @@ public class PlayerCharacter : MonoBehaviour {
         if (other.gameObject.name.Contains("EnemyProjectile"))
         {
             HP -= 1;
+            m_HPText.text = "HP: " + HP;
             Destroy(other.gameObject);
             if (HP == 0)
             {
@@ -258,10 +290,16 @@ public class PlayerCharacter : MonoBehaviour {
         }
         else if (other.gameObject.name == "FireScroll")
         {
+            m_HasSpell = true;
             Destroy(other.gameObject);
-            m_SpellList.AddLast("Fire");
-            m_SpellList.AddLast("Earth");
+            m_SpellList.AddLast("Fire");            
             m_SpellText.text = "Spell: " + m_SpellList.ElementAt(0);
+        }
+        else if (other.gameObject.name == "EarthScroll")
+        {
+            Destroy(other.gameObject);
+            m_SpellList.AddLast("Earth");
+            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(1);
         }
     }  
 }
