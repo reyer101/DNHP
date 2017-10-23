@@ -18,6 +18,7 @@ using UnityEngine.UI;
 // PlayerCharacter
 public class PlayerCharacter : MonoBehaviour {
     public GameObject m_LevitateTarget;
+    
     public float m_MaxSpeed, m_ClimbSpeed, m_CrouchSpeed, m_JumpForce, 
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
     public int HP;
@@ -31,10 +32,11 @@ public class PlayerCharacter : MonoBehaviour {
     private Vector3 m_NormalScale, m_CrouchScale, m_SpellSpawnPosition;
     private Quaternion m_ForwardRotation, m_BackRotation;
     private Color m_Highlight;
-    private Text m_SpellText, m_HPText, m_CDText;
+    private Text m_SpellText, m_HPText, m_CDText, m_NameText;
+    private Image m_Witch, m_Wizard;
 
-    private LinkedList<string> m_SpellList;
-    private int currentSpellIdx;
+    private LinkedList<string> m_SpellList;    
+    private int currentSpellIdx, spriteIndex;
     private float lastFireSpellTime, lastLevitateTime, lastToggleTime;
     private float k_GroundedRadius = .5f;
     private float k_ClimbRadius = 1.0f;
@@ -42,10 +44,14 @@ public class PlayerCharacter : MonoBehaviour {
 
     // Awake
     void Awake () {
-        m_HasSpell = false;   
+        m_HasSpell = false;        
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_Animator = GetComponent<Animator>();
         m_GroundCheck = transform.Find("GroundCheck");
+        m_Witch = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Image>();
+        m_Wizard = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Image>();
+        m_NameText = GameObject.FindGameObjectWithTag("NameText").GetComponent<Text>();
+        m_NameText.text = PlayerPrefs.GetString("Name");
         m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();
         m_HPText = GameObject.FindGameObjectWithTag("HPText").GetComponent<Text>();
         m_HPText.text = "HP: " + HP;
@@ -63,6 +69,15 @@ public class PlayerCharacter : MonoBehaviour {
         lastToggleTime = -100f;
         m_SpellList = new LinkedList<string>();        
         currentSpellIdx = 0;
+
+        if(PlayerPrefs.GetInt("Sprite") == 0)
+        {
+            m_Witch.enabled = false;
+        }
+        else
+        {
+            m_Wizard.enabled = true;
+        }
 	}
 	
 	// FixedUpdate

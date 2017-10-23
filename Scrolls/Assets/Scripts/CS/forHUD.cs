@@ -13,13 +13,26 @@ public class forHUD : MonoBehaviour {
 	public int nameIndex;
 	public int spriteIndex;
 
+    private List<Dropdown.OptionData> choices;    
+
+    // Awake
+    void Awake()
+    {
+        wizTog = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Toggle>();
+        witTog = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Toggle>();
+        nameSelect = GameObject.FindGameObjectWithTag("NameDrop").GetComponent<Dropdown>();
+        choices = nameSelect.options;       
+    }
+
+    // getName
 	public void getName()
 	{
 		nameIndex = nameSelect.value;
-		PlayerPrefs.SetInt ("Name", nameIndex);
+		PlayerPrefs.SetString ("Name", choices[nameIndex].text);
 		
 	}
 
+    // getSprite
 	public void getSprite()
 	{
 		if (wizTog.isOn == true) 
