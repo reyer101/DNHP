@@ -22,7 +22,8 @@ public class PlayerCharacter : MonoBehaviour {
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
     public int HP;
     public bool m_DropWhenOutOfRange, m_CanLevitateAndMove;    
-    private bool m_Grounded, m_CanClimb, m_HasSpell;    
+    private bool m_Grounded, m_CanClimb, m_HasSpell;
+    private Animator m_Animator;  
     private Rigidbody2D m_Rigidbody2D;
     private Transform m_GroundCheck, m_ClimbCheck;
     private CircleCollider2D m_CircleCollider2D;
@@ -43,6 +44,7 @@ public class PlayerCharacter : MonoBehaviour {
     void Awake () {
         m_HasSpell = false;   
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        m_Animator = GetComponent<Animator>();
         m_GroundCheck = transform.Find("GroundCheck");
         m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();
         m_HPText = GameObject.FindGameObjectWithTag("HPText").GetComponent<Text>();
@@ -87,8 +89,20 @@ public class PlayerCharacter : MonoBehaviour {
                 m_Rigidbody2D.gravityScale = 0;
             }               
         } 
-        
-        if(m_HasSpell)
+
+        if(m_Grounded)
+        {
+            m_Animator.speed = Mathf.Abs(.2f * m_Rigidbody2D.velocity.x);
+            Debug.Log("Velocity x: " + m_Rigidbody2D.velocity.x);        
+        }
+        else
+        {            
+            m_Animator.speed = 0;
+        }
+
+        Debug.Log("Animation speed: " + m_Animator.speed);
+
+        if (m_HasSpell)
         {
             switch (m_SpellList.ElementAt(currentSpellIdx))
             {
