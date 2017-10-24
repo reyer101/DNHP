@@ -18,6 +18,7 @@ public class Enemy : MonoBehaviour {
     private Vector2 moveDirection;
     private Quaternion fireRotation, forwardRotation, backRotation;
     private GameController gameController;
+    private AudioSource audio;
     private SpriteRenderer sr;
     private LayerMask m_LayerMask;
     private float initialPosition, lastAttackTime;
@@ -33,6 +34,7 @@ public class Enemy : MonoBehaviour {
         backRotation = new Quaternion(0, forwardRotation.y - 1, 0, 0);
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         player = GameObject.FindGameObjectWithTag("Player");
+        audio = GetComponent<AudioSource>();
         sr = GetComponent<SpriteRenderer>();
         m_LayerMask = 1;
         moveDirection = Vector2.right;
@@ -109,7 +111,8 @@ public class Enemy : MonoBehaviour {
                 "Spells/EnemyProjectile"), transform.position, transform.rotation);
             spell.transform.localRotation = fireRotation;
             lastAttackTime = Time.time;
-            Debug.Log("Fire rotation: " + fireRotation);
+            audio.clip = (AudioClip)Resources.Load(Constants.EnemySpellAudio);
+            audio.Play();
         }
     }
 

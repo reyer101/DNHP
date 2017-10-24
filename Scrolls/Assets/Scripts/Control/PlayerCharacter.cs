@@ -24,6 +24,7 @@ public class PlayerCharacter : MonoBehaviour {
     public int HP;
     public bool m_DropWhenOutOfRange, m_CanLevitateAndMove;    
     private bool m_Grounded, m_CanClimb, m_HasSpell;
+    private AudioSource m_Audio;
     private Animator m_Animator;  
     private Rigidbody2D m_Rigidbody2D;
     private Transform m_GroundCheck, m_ClimbCheck;
@@ -46,6 +47,7 @@ public class PlayerCharacter : MonoBehaviour {
     void Awake () {
         m_HasSpell = false;        
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        m_Audio = GetComponent<AudioSource>();
         m_Animator = GetComponent<Animator>();
         m_GroundCheck = transform.Find("GroundCheck");
         m_Witch = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Image>();
@@ -241,6 +243,8 @@ public class PlayerCharacter : MonoBehaviour {
                         GameObject spell = (GameObject)Instantiate(Resources.Load(
                             "Spells/FireSpell"), m_SpellSpawnPosition, spawnRotation);
                         lastFireSpellTime = Time.time;
+                        m_Audio.clip = (AudioClip)Resources.Load(Constants.FireSpellAudio);
+                        m_Audio.Play();
                     }
                     break;
                 case "Earth":                    
