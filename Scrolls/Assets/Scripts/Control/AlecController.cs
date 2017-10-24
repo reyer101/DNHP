@@ -8,7 +8,7 @@ Name: Alec Reyerson
 ID: 1826582
 Email: reyer101@mail.chapman.edu
 Course: CPSC-344-01
-Assignment: Alpha Milestone
+Assignment: Beta Milestone
 
 Description: Script for handling player input
 */

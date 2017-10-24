@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Carissa Smith / Alec Reyerson
+//1800292
+//smith426@mail.chapman.edu
+//CPSC-344-01
+//Scrolls
+//This script's purpose is to load scenes within the game. 
 public class forHUD : MonoBehaviour {
 
 	public Toggle wizTog;
