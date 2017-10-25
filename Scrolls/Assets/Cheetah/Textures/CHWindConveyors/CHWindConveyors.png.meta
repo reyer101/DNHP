@@ -1,0 +1,674 @@
+fileFormatVersion: 2
+guid: ba06ed653102349399b22c4bd2cf5cfd
+timeCreated: 1507596464
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: CHWindConveyor01
+    21300002: CHWindConveyor02
+    21300004: CHWindConveyor03
+    21300006: CHWindConveyor04
+    21300008: CHWindConveyor05
+    21300010: CHWindConveyor06
+    21300012: CHWindConveyor07
+    21300014: CHWindConveyor08
+    21300016: CHWindConveyor09
+    21300018: CHWindConveyor10
+    21300020: CHWindConveyor11
+    21300022: CHWindConveyor12
+    21300024: CHWindConveyor13
+    21300026: CHWindConveyor14
+    21300028: CHWindConveyor15
+    21300030: CHWindConveyor16
+    21300032: CHWindConveyor17
+    21300034: CHWindConveyor18
+    21300036: CHWindConveyor19
+    21300038: CHWindConveyor20
+    21300040: CHWindConveyorFloating01
+    21300042: CHWindConveyorFloating02
+    21300044: CHWindConveyorFloating03
+    21300046: CHWindConveyorFloating04
+    21300048: CHWindConveyorFloating05
+    21300050: CHWindConveyorFloating06
+    21300052: CHWindConveyorFloating07
+    21300054: CHWindConveyorFloating08
+    21300056: CHWindConveyorFloating09
+    21300058: CHWindConveyorFloating10
+    21300060: CHWindConveyorFloating11
+    21300062: CHWindConveyorFloating12
+    21300064: CHWindConveyorFloating13
+    21300066: CHWindConveyorFloating14
+    21300068: CHWindConveyorFloating15
+    21300070: CHWindConveyorFloating16
+    21300072: CHWindConveyorFloating17
+    21300074: CHWindConveyorFloating18
+    21300076: CHWindConveyorFloating19
+    21300078: CHWindConveyorFloating20
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: CHWindConveyor01
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1044
+        width: 724
+        height: 88
+      alignment: 9
+      pivot: {x: 0.5, y: 0.52840906}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor02
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 965
+        width: 724
+        height: 88
+      alignment: 9
+      pivot: {x: 0.5, y: 0.52840906}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor03
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 954
+        width: 724
+        height: 88
+      alignment: 9
+      pivot: {x: 0.5, y: 0.52840906}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor04
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 875
+        width: 724
+        height: 88
+      alignment: 9
+      pivot: {x: 0.5, y: 0.52840906}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor05
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 595
+        width: 724
+        height: 87
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5229885}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor06
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 418
+        width: 724
+        height: 86
+      alignment: 9
+      pivot: {x: 0.5, y: 0.51744187}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor07
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 520
+        width: 724
+        height: 85
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5117647}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor08
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 330
+        width: 724
+        height: 86
+      alignment: 9
+      pivot: {x: 0.5, y: 0.50581396}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor09
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 864
+        width: 724
+        height: 88
+      alignment: 9
+      pivot: {x: 0.5, y: 0.51704544}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor10
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1237
+        width: 724
+        height: 89
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5224719}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor11
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 785
+        width: 724
+        height: 88
+      alignment: 9
+      pivot: {x: 0.5, y: 0.52840906}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor12
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1146
+        width: 724
+        height: 89
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5224719}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor13
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1134
+        width: 724
+        height: 89
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5224719}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor14
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1055
+        width: 724
+        height: 89
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5224719}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor15
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 242
+        width: 724
+        height: 86
+      alignment: 9
+      pivot: {x: 0.5, y: 0.51744187}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor16
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 154
+        width: 724
+        height: 86
+      alignment: 9
+      pivot: {x: 0.5, y: 0.51744187}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor17
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 433
+        width: 724
+        height: 85
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5117647}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor18
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 346
+        width: 724
+        height: 85
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5117647}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor19
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 506
+        width: 724
+        height: 87
+      alignment: 9
+      pivot: {x: 0.5, y: 0.5229885}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyor20
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 774
+        width: 724
+        height: 88
+      alignment: 9
+      pivot: {x: 0.5, y: 0.52840906}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating01
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 66
+        width: 724
+        height: 86
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4127907}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating02
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 259
+        width: 724
+        height: 85
+      alignment: 9
+      pivot: {x: 0.5, y: 0.40588236}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating03
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 695
+        width: 724
+        height: 88
+      alignment: 9
+      pivot: {x: 0.5, y: 0.42613637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating04
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1946
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating05
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1946
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating06
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1843
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating07
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1843
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating08
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1740
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating09
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1740
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating10
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1637
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating11
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1637
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating12
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1534
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating13
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1534
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating14
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1431
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating15
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1431
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating16
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1328
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating17
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 1328
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating18
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1225
+        width: 724
+        height: 101
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating19
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 684
+        width: 724
+        height: 88
+      alignment: 9
+      pivot: {x: 0.5, y: 0.42613637}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    - serializedVersion: 2
+      name: CHWindConveyorFloating20
+      rect:
+        serializedVersion: 2
+        x: 727
+        y: 607
+        width: 724
+        height: 86
+      alignment: 9
+      pivot: {x: 0.5, y: 0.4127907}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+    outline: []
+    physicsShape: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
