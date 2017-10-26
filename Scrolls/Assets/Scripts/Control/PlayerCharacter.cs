@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
@@ -18,7 +19,7 @@ using UnityEngine.UI;
 // PlayerCharacter
 public class PlayerCharacter : MonoBehaviour {
     public GameObject m_LevitateTarget;
-    
+    public LinkedList<GameObject> m_LevitateTargets;    
     public float m_MaxSpeed, m_ClimbSpeed, m_CrouchSpeed, m_JumpForce, 
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
     public int HP;
@@ -37,12 +38,12 @@ public class PlayerCharacter : MonoBehaviour {
     private Image m_Witch, m_Wizard;
 
     private LinkedList<string> m_SpellList;    
-    private int currentSpellIdx, spriteIndex;
+    private int currentSpellIdx, spriteIndex, targetIndex;
     private float lastFireSpellTime, lastLevitateTime, lastToggleTime;
     private float k_GroundedRadius = .5f;
     private float k_ClimbRadius = 1.0f;
     public float k_GroundDistance;
-    private float m_LevitateCD = 1f;   
+    private float m_LevitateCD = 1f;     
 
     // Awake
     void Awake () {
@@ -70,11 +71,13 @@ public class PlayerCharacter : MonoBehaviour {
         m_LayerMask = -1;
         lastFireSpellTime = -100f;
         lastLevitateTime = -100f;
-        lastToggleTime = -100f;
+        lastToggleTime = -100f;        
         m_SpellList = new LinkedList<string>();
+        m_LevitateTargets = new LinkedList<GameObject>();
         m_SpellList.AddLast("Fire");
         m_SpellList.AddLast("Earth");
         currentSpellIdx = 0;
+        targetIndex = 0;
 
         if(PlayerPrefs.GetInt("Sprite") == 0)
         {
@@ -127,9 +130,7 @@ public class PlayerCharacter : MonoBehaviour {
         else
         {            
             m_Animator.speed = 0;
-        }  
-        
-          
+        }          
 
         if (m_HasSpell)
         {
@@ -271,25 +272,30 @@ public class PlayerCharacter : MonoBehaviour {
                                 if (colliders[i].gameObject.tag == "Liftable")
                                 {
                                     Debug.Log("Cast earth spell");
-                                    m_LevitateTarget = colliders[i].gameObject;
-                                    m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
-                                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
+                                    m_LevitateTargets.AddLast(colliders[i].gameObject);                                    
                                     lastLevitateTime = Time.time;
                                 }
+                                if(m_LevitateTargets.Count > 0)
+                                {
+                                    m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
+                                    m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
+                                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
+                                }                               
                             }
                         }
                         else
                         {                            
                             m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
                             m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                            m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;
+                            m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;                            
                             m_LevitateTarget = null;
+                            m_LevitateTargets.Clear();
+                            targetIndex = 0;
                             lastLevitateTime = Time.time;
                             Debug.Log("Levitate target null");
                         }                        
                     }                    
-                    break;
-                // Other spell cases 
+                    break;                 
             }
         }          
     } 
@@ -312,11 +318,40 @@ public class PlayerCharacter : MonoBehaviour {
                     m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
                     m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;
                     m_LevitateTarget = null;
+                    m_LevitateTargets.Clear();
+                    targetIndex = 0;
                 }                           
             }
             m_SpellText.text = "Spell: " + m_SpellList.ElementAt(currentSpellIdx);            
         }
         lastToggleTime = Time.time;        
+    }
+
+    // toggleTarget
+    public void toggleTarget()
+    {
+        if(m_LevitateTargets.Count > 0)
+        {
+            m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
+            m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;
+
+            try
+            {
+                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex + 1);
+                m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
+                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
+                targetIndex = targetIndex + 1;
+            }
+            catch(ArgumentOutOfRangeException e)
+            {
+                targetIndex = 0;
+                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
+                m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
+                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
+            }
+            
+        }       
     }
     
     // OnTriggerEnter2D

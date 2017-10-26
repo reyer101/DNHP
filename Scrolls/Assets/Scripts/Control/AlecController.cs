@@ -47,6 +47,12 @@ public class AlecController : MonoBehaviour {
         {
             m_Player.toggleSpell();
         }
+        
+        if(CrossPlatformInputManager.GetButtonDown("ToggleTarget"))
+        {
+            Debug.Log("Y Pressed");
+            m_Player.toggleTarget();
+        }              
 
         if (CrossPlatformInputManager.GetButtonDown("Crouch"))
         {
@@ -74,6 +80,6 @@ public class AlecController : MonoBehaviour {
 
         float lh = CrossPlatformInputManager.GetAxis("RightAnalogHori");
         float lv = CrossPlatformInputManager.GetAxis("RightAnalogVert");        
-        m_Player.MoveLevitationTarget(lh, lv);
+        m_Player.MoveLevitationTarget(lh, lv);       
     }
 }
