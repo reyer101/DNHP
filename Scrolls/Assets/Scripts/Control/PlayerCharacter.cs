@@ -23,7 +23,7 @@ public class PlayerCharacter : MonoBehaviour {
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
     public int HP;
     public bool m_DropWhenOutOfRange, m_CanLevitateAndMove;    
-    private bool m_Grounded, m_CanClimb, m_HasSpell;
+    private bool m_Grounded, m_CanClimb, m_HasSpell, m_LeviateDisabled;
     private AudioSource m_Audio;
     private Animator m_Animator;  
     private Rigidbody2D m_Rigidbody2D;
@@ -41,11 +41,12 @@ public class PlayerCharacter : MonoBehaviour {
     private float lastFireSpellTime, lastLevitateTime, lastToggleTime;
     private float k_GroundedRadius = .5f;
     private float k_ClimbRadius = 1.0f;
+    public float k_GroundDistance;
     private float m_LevitateCD = 1f;   
 
     // Awake
     void Awake () {
-        m_HasSpell = false;        
+        m_HasSpell = true;        
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_Audio = GetComponent<AudioSource>();
         m_Animator = GetComponent<Animator>();
@@ -55,6 +56,7 @@ public class PlayerCharacter : MonoBehaviour {
         m_NameText = GameObject.FindGameObjectWithTag("NameText").GetComponent<Text>();
         m_NameText.text = PlayerPrefs.GetString("Name");
         m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();
+        m_SpellText.text = "Spell: Fire";
         m_HPText = GameObject.FindGameObjectWithTag("HPText").GetComponent<Text>();
         m_HPText.text = "HP: " + HP;
         m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();
@@ -65,11 +67,13 @@ public class PlayerCharacter : MonoBehaviour {
         m_SpellSpawnPosition = transform.Find("SpellSpawner").transform.position;
         m_ForwardRotation = transform.rotation;              
         m_BackRotation = new Quaternion(0, m_ForwardRotation.y - 1, 0, 0);          
-        m_LayerMask = 1;
+        m_LayerMask = -1;
         lastFireSpellTime = -100f;
         lastLevitateTime = -100f;
         lastToggleTime = -100f;
-        m_SpellList = new LinkedList<string>();        
+        m_SpellList = new LinkedList<string>();
+        m_SpellList.AddLast("Fire");
+        m_SpellList.AddLast("Earth");
         currentSpellIdx = 0;
 
         if(PlayerPrefs.GetInt("Sprite") == 0)
@@ -83,18 +87,27 @@ public class PlayerCharacter : MonoBehaviour {
 	}
 	
 	// FixedUpdate
-	void FixedUpdate () {
+	void FixedUpdate () {        
         m_Grounded = false;
-        m_CanClimb = false;        
+        m_CanClimb = false;
+        m_LeviateDisabled = false;       
         m_Rigidbody2D.gravityScale = 2;
         m_SpellSpawnPosition = transform.Find("SpellSpawner").transform.position;
 
         // Check if player is standing on ground by searching for colliders overlapping radius at bottom of player
         Collider2D[] gColliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_LayerMask);
         for (int i = 0; i < gColliders.Length; i++)
-        {            
+        {
+            Debug.Log("GroundCollider colliding with: " + gColliders[i].gameObject.name);            
             if (gColliders[i].gameObject != gameObject)  // If a collider besides the one attatched to the player is found
-                m_Grounded = true;                      // then the player is considerd to be grounded           
+            {                                            // then the player is considerd to be grounded
+                m_Grounded = true;
+                if(gColliders[i].gameObject == m_LevitateTarget)
+                {
+                    m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                    m_LeviateDisabled = true;
+                }
+            }                   
         }
 
         Collider2D[] cColliders = Physics2D.OverlapCircleAll(m_ClimbCheck.position, k_ClimbRadius, m_LayerMask);
@@ -109,15 +122,14 @@ public class PlayerCharacter : MonoBehaviour {
 
         if(m_Grounded)
         {
-            m_Animator.speed = Mathf.Abs(.2f * m_Rigidbody2D.velocity.x);
-            Debug.Log("Velocity x: " + m_Rigidbody2D.velocity.x);        
+            m_Animator.speed = Mathf.Abs(.2f * m_Rigidbody2D.velocity.x);                    
         }
         else
         {            
             m_Animator.speed = 0;
-        }
-
-        Debug.Log("Animation speed: " + m_Animator.speed);
+        }  
+        
+          
 
         if (m_HasSpell)
         {
@@ -147,7 +159,7 @@ public class PlayerCharacter : MonoBehaviour {
                     break;
             }
         }        
-    }
+    }  
 
     /*
     Name: Move
@@ -203,7 +215,7 @@ public class PlayerCharacter : MonoBehaviour {
 
     public void MoveLevitationTarget(float h, float v)
     {                
-        if(m_LevitateTarget != null)
+        if(m_LevitateTarget != null && !m_LeviateDisabled)
         {
             Rigidbody2D rb = m_LevitateTarget.GetComponent<Rigidbody2D>();
             Vector3 direction = new Vector3(h, -v, 0);
