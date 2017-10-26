@@ -47,7 +47,7 @@ public class PlayerCharacter : MonoBehaviour {
 
     // Awake
     void Awake () {
-        m_HasSpell = true;        
+        m_HasSpell = false;        
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_Audio = GetComponent<AudioSource>();
         m_Animator = GetComponent<Animator>();
@@ -56,8 +56,7 @@ public class PlayerCharacter : MonoBehaviour {
         m_Wizard = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Image>();
         m_NameText = GameObject.FindGameObjectWithTag("NameText").GetComponent<Text>();
         m_NameText.text = PlayerPrefs.GetString("Name");
-        m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();
-        m_SpellText.text = "Spell: Fire";
+        m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();       
         m_HPText = GameObject.FindGameObjectWithTag("HPText").GetComponent<Text>();
         m_HPText.text = "HP: " + HP;
         m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();
@@ -73,11 +72,17 @@ public class PlayerCharacter : MonoBehaviour {
         lastLevitateTime = -100f;
         lastToggleTime = -100f;        
         m_SpellList = new LinkedList<string>();
-        m_LevitateTargets = new LinkedList<GameObject>();
-        m_SpellList.AddLast("Fire");
-        m_SpellList.AddLast("Earth");
+        m_LevitateTargets = new LinkedList<GameObject>();        
         currentSpellIdx = 0;
         targetIndex = 0;
+
+        if(SceneManager.GetActiveScene().name == "1-1KH")
+        {
+            m_SpellList.AddLast("Fire");
+            m_SpellList.AddLast("Earth");
+            m_SpellText.text = "Spell: Fire";
+            m_HasSpell = true;
+        }
 
         if(PlayerPrefs.GetInt("Sprite") == 0)
         {
@@ -218,6 +223,7 @@ public class PlayerCharacter : MonoBehaviour {
     {                
         if(m_LevitateTarget != null && !m_LeviateDisabled)
         {
+            Debug.Log("Levitate");
             Rigidbody2D rb = m_LevitateTarget.GetComponent<Rigidbody2D>();
             Vector3 direction = new Vector3(h, -v, 0);
             if (!(Mathf.Abs(m_LevitateTarget.transform.position.y - transform.position.y) >= m_LevitateRadius

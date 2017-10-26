@@ -15,9 +15,10 @@ using UnityEngine;
 
 // GameController
 public class GameController : MonoBehaviour {
-    public Vector2 currentCheckPoint;
+    public static Vector2 currentCheckPoint;
     public GameObject barrierOne, barrierTwo;
     public bool roomOneDone, roomTwoDone;
+    private static GameObject player;
     private Text tutText;    
 
 	// Awake
@@ -27,7 +28,8 @@ public class GameController : MonoBehaviour {
 	}
 	
 	// Update
-	void Update () {        
+	void Update () {
+        player = GameObject.FindGameObjectWithTag("Player");      
         if(roomOneDone)
         {            
             barrierOne.GetComponent<BoxCollider2D>().enabled = false;
@@ -37,4 +39,12 @@ public class GameController : MonoBehaviour {
             barrierTwo.GetComponent<BoxCollider2D>().enabled = false;
         }    		
 	}
+
+    // KillPlayer
+    public static IEnumerator KillPlayer()
+    {
+        Destroy(player);
+        yield return new WaitForSeconds(2f);
+        player = (GameObject)Instantiate(Resources.Load("Player"), currentCheckPoint, new Quaternion());        
+    }
 }

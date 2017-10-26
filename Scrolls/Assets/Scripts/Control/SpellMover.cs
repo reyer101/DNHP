@@ -23,10 +23,6 @@ public class SpellMover : MonoBehaviour {
 
     void onTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("Other object: " + other.gameObject.name);
-        if (!other.gameObject.name.Contains("Player"))
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 }

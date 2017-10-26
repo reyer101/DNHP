@@ -266,6 +266,9 @@
     <Compile Include="Assets\Scripts\Control\RightAnalogRotator.cs" />
     <Compile Include="Assets\Scripts\Control\SpellMover.cs" />
     <Compile Include="Assets\Scripts\Control\TorchTrigger.cs" />
+    <Compile Include="Assets\Scripts\Triggers\Checkpoint.cs" />
+    <Compile Include="Assets\Scripts\Triggers\TriggerDeath.cs" />
+    <Compile Include="Assets\Scripts\Triggers\TriggerNextScene.cs" />
     <Compile Include="Assets\Scripts\Utils\Constants.cs" />
     <Compile Include="Assets\Scripts\Utils\MusicManager.cs" />
   </ItemGroup>

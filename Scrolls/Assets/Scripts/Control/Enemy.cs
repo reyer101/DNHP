@@ -14,6 +14,7 @@ using UnityEngine;
 
 // Enemy
 public class Enemy : MonoBehaviour {
+    public float killVelocity;
     GameObject player;    
     private Vector2 moveDirection;
     private Quaternion fireRotation, forwardRotation, backRotation;
@@ -133,7 +134,7 @@ public class Enemy : MonoBehaviour {
 
     // OnTriggerEnter2D
     void OnTriggerEnter2D(Collider2D other)
-    {
+    {        
         if (other.gameObject.name.Contains("Fire"))
         {
             Destroy(other.gameObject);
@@ -142,6 +143,33 @@ public class Enemy : MonoBehaviour {
             {
                 gameController.roomTwoDone = true;
                 Destroy(gameObject);
+            }
+        } 
+        else if (other.gameObject.tag.Equals("Liftable"))
+        {
+            float velocity = other.gameObject.GetComponent<Rigidbody2D>().velocity.y;
+            if (velocity <= -killVelocity)
+            {
+                Debug.Log(other.gameObject.GetComponent<Rigidbody2D>().velocity.y);                
+                Destroy(gameObject);
+                Destroy(other.gameObject);
+            } 
+            else if (velocity <= (.5f * -killVelocity))
+            {
+                Debug.Log("Hitpoints - 2");
+                hitPoints -= 2;
+                Destroy(other.gameObject);
+            } 
+            else
+            {
+                Debug.Log("Hitpoints - 1");
+                hitPoints -= 1;
+                Destroy(other.gameObject);
+            }
+
+            if (hitPoints <= 0)
+            {                
+                Destroy(gameObject);                
             }
         }
     }
