@@ -86,6 +86,7 @@
     <Compile Include="Assets\2D Platformer Controller\Scripts\Player.cs" />
     <Compile Include="Assets\2D Platformer Controller\Scripts\PlayerInput.cs" />
     <Compile Include="Assets\2D Platformer Controller\Scripts\RaycastController.cs" />
+    <Compile Include="Assets\Cheetah\SampleScenes\Scripts\SlowMoButton.cs" />
     <Compile Include="Assets\Ferr\2D\Scripts\Ferr2D_DynamicMesh.cs" />
     <Compile Include="Assets\Ferr\2D\Scripts\Ferr2D_IPath.cs" />
     <Compile Include="Assets\Ferr\2D\Scripts\Ferr2D_Path.cs" />
@@ -256,7 +257,6 @@
     <Compile Include="Assets\SampleScenes\Scripts\LevelReset.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\ParticleSceneControls.cs" />
     <Compile Include="Assets\SampleScenes\Scripts\PlaceTargetWithMouse.cs" />
-    <Compile Include="Assets\SampleScenes\Scripts\SlowMoButton.cs" />
     <Compile Include="Assets\Scripts\CS\LoadScene.cs" />
     <Compile Include="Assets\Scripts\CS\forHUD.cs" />
     <Compile Include="Assets\Scripts\Control\AlecController.cs" />
@@ -273,6 +273,7 @@
     <None Include="Assets\2D Platformer Controller\LICENSE.txt" />
     <None Include="Assets\2D Platformer Controller\LICENSE02.txt" />
     <None Include="Assets\2D Platformer Controller\Readme.txt" />
+    <None Include="Assets\Cheetah\SampleScenes\Shaders\Skybox-Procedural.shader" />
     <None Include="Assets\Ferr\2D\Scripts\poly2tri.cs\AUTHORS.txt" />
     <None Include="Assets\Ferr\2D\Scripts\poly2tri.cs\LICENSE.txt" />
     <None Include="Assets\Ferr\2DTerrain\Shaders\Ferr2DTCommon.cginc" />
