@@ -24,7 +24,7 @@ public class PlayerCharacter : MonoBehaviour {
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
     public int HP;
     public bool m_DropWhenOutOfRange, m_CanLevitateAndMove;    
-    private bool m_Grounded, m_CanClimb, m_HasSpell, m_LeviateDisabled;
+    private bool m_Grounded, m_CanClimb, m_HasSpell, m_LeviateDisabled, m_;
     private AudioSource m_Audio;
     private Animator m_Animator;  
     private Rigidbody2D m_Rigidbody2D;
@@ -40,10 +40,12 @@ public class PlayerCharacter : MonoBehaviour {
     private LinkedList<string> m_SpellList;    
     private int currentSpellIdx, spriteIndex, targetIndex;
     private float lastFireSpellTime, lastLevitateTime, lastToggleTime;
-    private float k_GroundedRadius = .5f;
+    private float k_GroundedRadius = .5f;   
     private float k_ClimbRadius = 1.0f;
+    private float k_UnderRadius = 1f;
+    private float m_LevitateCD = 1f;
     public float k_GroundDistance;
-    private float m_LevitateCD = 1f;     
+         
 
     // Awake
     void Awake () {
@@ -126,7 +128,9 @@ public class PlayerCharacter : MonoBehaviour {
                 m_CanClimb = true;
                 m_Rigidbody2D.gravityScale = 0;
             }               
-        } 
+        }
+
+        checkCanLevitateVert();
 
         if(m_Grounded)
         {
@@ -215,7 +219,7 @@ public class PlayerCharacter : MonoBehaviour {
     {        
         if (m_CanClimb)
         {            
-            m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, vertical * m_ClimbSpeed);
+            m_Rigidbody2D.velocity = new Vector2(m_Rigidbody2D.velocity.x, vertical * m_ClimbSpeed);            
         }
     }
 
@@ -229,8 +233,10 @@ public class PlayerCharacter : MonoBehaviour {
             if (!(Mathf.Abs(m_LevitateTarget.transform.position.y - transform.position.y) >= m_LevitateRadius
                 || Mathf.Abs(m_LevitateTarget.transform.position.x - transform.position.x) >= m_LevitateRadius))
             {
-                Debug.Log("Levitate target not null???: " + m_LevitateTarget.name);                                
-                rb.velocity = direction * 20f * m_LevitateSpeed * Time.deltaTime;
+                if(m_Grounded)
+                {
+                    rb.velocity = direction * 20f * m_LevitateSpeed * Time.deltaTime;                    
+                }                                                                
             }
             else
             {
@@ -285,7 +291,8 @@ public class PlayerCharacter : MonoBehaviour {
                                 {
                                     m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
                                     m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
-                                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
+                                    Debug.Log("Levitate target FreezePositionY");                                                                       
+                                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;                                    
                                 }                               
                             }
                         }
@@ -344,7 +351,7 @@ public class PlayerCharacter : MonoBehaviour {
 
             try
             {
-                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex + 1);
+                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex + 1);                
                 m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
                 m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
                 targetIndex = targetIndex + 1;
@@ -352,12 +359,46 @@ public class PlayerCharacter : MonoBehaviour {
             catch(ArgumentOutOfRangeException e)
             {
                 targetIndex = 0;
-                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
+                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);                
                 m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
                 m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
             }
-            
+
+            if (Mathf.Abs(m_LevitateTarget.transform.position.y - transform.position.y) >= m_LevitateRadius
+                || Mathf.Abs(m_LevitateTarget.transform.position.x - transform.position.x) >= m_LevitateRadius)
+            {
+                Debug.Log("Should be remving levitate target");
+                m_LevitateTargets.Remove(m_LevitateTarget);
+                m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
+                m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;
+                toggleTarget();
+            }
+        }
+        else
+        {
+            m_LevitateTarget = null;
         }       
+    }
+
+    // checkCanLevitateVert
+    private void checkCanLevitateVert()
+    {
+        if(m_LevitateTarget != null)
+        {
+            m_LevitateTarget.GetComponent<Rigidbody2D>().constraints &= ~RigidbodyConstraints2D.FreezePositionY;
+            Vector2 checkPosition = m_LevitateTarget.transform.position + new Vector3(0, 1.4f);
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(checkPosition, k_UnderRadius, m_LayerMask);
+            foreach (Collider2D collider in colliders)
+            {
+                if (collider.gameObject != m_LevitateTarget.gameObject)
+                {
+                    Debug.Log("Hit object: " + collider.gameObject.name);
+                    m_LevitateTarget.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY
+                       | RigidbodyConstraints2D.FreezeRotation;
+                }
+            }            
+        }
     }
     
     // OnTriggerEnter2D
