@@ -102,7 +102,10 @@ public class PlayerCharacter : MonoBehaviour {
         m_CanClimb = false;
         m_LeviateDisabled = false;       
         m_Rigidbody2D.gravityScale = 2;
+        checkCanLevitateVert();
         m_SpellSpawnPosition = transform.Find("SpellSpawner").transform.position;
+
+        Debug.Log("Levitation target: " + m_LevitateTarget);
 
         // Check if player is standing on ground by searching for colliders overlapping radius at bottom of player
         Collider2D[] gColliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_LayerMask);
@@ -111,12 +114,7 @@ public class PlayerCharacter : MonoBehaviour {
             Debug.Log("GroundCollider colliding with: " + gColliders[i].gameObject.name);            
             if (gColliders[i].gameObject != gameObject)  // If a collider besides the one attatched to the player is found
             {                                            // then the player is considerd to be grounded
-                m_Grounded = true;
-                if(gColliders[i].gameObject == m_LevitateTarget)
-                {
-                    m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                    m_LeviateDisabled = true;
-                }
+                m_Grounded = true;               
             }                   
         }
 
@@ -128,9 +126,7 @@ public class PlayerCharacter : MonoBehaviour {
                 m_CanClimb = true;
                 m_Rigidbody2D.gravityScale = 0;
             }               
-        }
-
-        checkCanLevitateVert();
+        }       
 
         if(m_Grounded)
         {
@@ -179,6 +175,8 @@ public class PlayerCharacter : MonoBehaviour {
     {
         if(m_CanLevitateAndMove || (!m_CanLevitateAndMove && m_LevitateTarget == null))
         {
+            m_Rigidbody2D.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
+
             if (horizontal < 0)
             {
                 transform.rotation = m_BackRotation;
@@ -187,10 +185,24 @@ public class PlayerCharacter : MonoBehaviour {
             {
                 transform.rotation = m_ForwardRotation;
             }
+            
+            if(Mathf.Abs(horizontal) < .1)
+            {                
+                // Prevents the player from being pushed by levitating object
+                m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX
+                      | RigidbodyConstraints2D.FreezeRotation;
+            }            
+
+            if(horizontal <= 0 && m_Rigidbody2D.velocity.x > 0
+                || horizontal >= 0 && m_Rigidbody2D.velocity.x < 0)
+            {
+                m_Rigidbody2D.constraints = RigidbodyConstraints2D.FreezePositionX
+                     | RigidbodyConstraints2D.FreezeRotation;
+            }            
 
             if (!crouch)
             {
-                m_Rigidbody2D.velocity = new Vector2(horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);
+                m_Rigidbody2D.velocity = new Vector2(horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);                
                 gameObject.transform.localScale = m_NormalScale;
             }
             else
@@ -223,11 +235,14 @@ public class PlayerCharacter : MonoBehaviour {
         }
     }
 
+    /*
+    Name: MoveLevitationTarget
+    Parameters: float h, float v
+    */
     public void MoveLevitationTarget(float h, float v)
     {                
         if(m_LevitateTarget != null && !m_LeviateDisabled)
-        {
-            Debug.Log("Levitate");
+        {            
             Rigidbody2D rb = m_LevitateTarget.GetComponent<Rigidbody2D>();
             Vector3 direction = new Vector3(h, -v, 0);
             if (!(Mathf.Abs(m_LevitateTarget.transform.position.y - transform.position.y) >= m_LevitateRadius
@@ -282,16 +297,14 @@ public class PlayerCharacter : MonoBehaviour {
                             for (int i = 0; i < colliders.Length; ++i)
                             {
                                 if (colliders[i].gameObject.tag == "Liftable")
-                                {
-                                    Debug.Log("Cast earth spell");
+                                {                                    
                                     m_LevitateTargets.AddLast(colliders[i].gameObject);                                    
                                     lastLevitateTime = Time.time;
                                 }
                                 if(m_LevitateTargets.Count > 0)
                                 {
                                     m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
-                                    m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
-                                    Debug.Log("Levitate target FreezePositionY");                                                                       
+                                    m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;                                                                                                          
                                     m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;                                    
                                 }                               
                             }
@@ -304,8 +317,7 @@ public class PlayerCharacter : MonoBehaviour {
                             m_LevitateTarget = null;
                             m_LevitateTargets.Clear();
                             targetIndex = 0;
-                            lastLevitateTime = Time.time;
-                            Debug.Log("Levitate target null");
+                            lastLevitateTime = Time.time;                            
                         }                        
                     }                    
                     break;                 
@@ -351,14 +363,16 @@ public class PlayerCharacter : MonoBehaviour {
 
             try
             {
+                m_LevitateTargets.ElementAt(targetIndex).GetComponent<Rigidbody2D>().constraints
+                    &= ~RigidbodyConstraints2D.FreezePositionY;
                 m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex + 1);                
                 m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
                 m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
                 targetIndex = targetIndex + 1;
             }
             catch(ArgumentOutOfRangeException e)
-            {
-                targetIndex = 0;
+            {                
+                targetIndex = 0;                
                 m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);                
                 m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
                 m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
@@ -366,8 +380,7 @@ public class PlayerCharacter : MonoBehaviour {
 
             if (Mathf.Abs(m_LevitateTarget.transform.position.y - transform.position.y) >= m_LevitateRadius
                 || Mathf.Abs(m_LevitateTarget.transform.position.x - transform.position.x) >= m_LevitateRadius)
-            {
-                Debug.Log("Should be remving levitate target");
+            {                
                 m_LevitateTargets.Remove(m_LevitateTarget);
                 m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
                 m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
@@ -391,9 +404,8 @@ public class PlayerCharacter : MonoBehaviour {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(checkPosition, k_UnderRadius, m_LayerMask);
             foreach (Collider2D collider in colliders)
             {
-                if (collider.gameObject != m_LevitateTarget.gameObject)
-                {
-                    Debug.Log("Hit object: " + collider.gameObject.name);
+                if (collider.gameObject != m_LevitateTarget.gameObject && collider.gameObject.tag == "Liftable")
+                {                    
                     m_LevitateTarget.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY
                        | RigidbodyConstraints2D.FreezeRotation;
                 }
