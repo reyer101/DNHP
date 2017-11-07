@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 /*
@@ -141,7 +142,10 @@ public class Enemy : MonoBehaviour {
             hitPoints -= 1;
             if(hitPoints == 0)
             {
-                gameController.roomTwoDone = true;
+                if (SceneManager.GetActiveScene().name.Contains("Turtorial"))
+                {
+                    gameController.roomTwoDone = true;
+                }                
                 Destroy(gameObject);
             }
         } 
