@@ -343,9 +343,7 @@ public class PlayerCharacter : MonoBehaviour {
             {
                 m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
                 m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;
-                m_LevitateTargets.ElementAt(targetIndex).GetComponent<Rigidbody2D>().constraints
-                        &= ~RigidbodyConstraints2D.FreezePositionY;
+                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;               
             }
             else
             {
@@ -353,18 +351,42 @@ public class PlayerCharacter : MonoBehaviour {
             }                               
 
             try
-            {                
-                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex + 1);                
-                m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
-                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
-                targetIndex = targetIndex + 1;
+            {
+                m_LevitateTargets.ElementAt(targetIndex).GetComponent<Rigidbody2D>().constraints
+                       &= ~RigidbodyConstraints2D.FreezePositionY;
+                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex + 1); 
+                if(m_LevitateTarget != null)
+                {
+                    m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
+                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
+                    targetIndex = targetIndex + 1;
+                } 
+                else
+                {
+                    toggleTarget();
+                }                 
             }
             catch(ArgumentOutOfRangeException e)
             {                
-                targetIndex = 0;                
-                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);                
-                m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
-                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
+                targetIndex = 0;      
+                if(m_LevitateTargets.Count > 0)
+                {
+                    m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
+                }
+                else
+                {
+                    return;
+                }                          
+                
+                if (m_LevitateTarget != null)
+                {
+                    m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
+                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
+                }
+                else
+                {
+                    toggleTarget();
+                }               
             }
 
             if (Mathf.Abs(m_LevitateTarget.transform.position.y - transform.position.y) >= m_LevitateRadius
