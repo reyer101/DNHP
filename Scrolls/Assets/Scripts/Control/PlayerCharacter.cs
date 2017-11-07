@@ -72,9 +72,9 @@ public class PlayerCharacter : MonoBehaviour {
         m_LayerMask = -1;
         lastFireSpellTime = -100f;
         lastLevitateTime = -100f;
-        lastToggleTime = -100f;        
-        m_SpellList = new LinkedList<string>();
+        lastToggleTime = -100f;
         m_LevitateTargets = new LinkedList<GameObject>();        
+        m_SpellList = new LinkedList<string>();              
         currentSpellIdx = 0;
         targetIndex = 0;
 
@@ -289,24 +289,7 @@ public class PlayerCharacter : MonoBehaviour {
                     {
                         if(m_LevitateTarget == null)
                         {
-                            Collider2D[] colliders = Physics2D.OverlapCircleAll(
-                                transform.position, m_LevitateRadius, m_LayerMask);
-                            for (int i = 0; i < colliders.Length; ++i)
-                            {
-                                if (colliders[i].gameObject.tag == "Liftable"
-                                    && !m_LevitateTargets.Contains(colliders[i].gameObject))
-                                {                                    
-                                    m_LevitateTargets.AddLast(colliders[i].gameObject);                                    
-                                    lastLevitateTime = Time.time;
-                                }                                                             
-                            }
-
-                            if (m_LevitateTargets.Count > 0)
-                            {
-                                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
-                                m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
-                                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
-                            }
+                            findLevitateTargets();                            
                         }
                         else
                         {                            
@@ -356,14 +339,21 @@ public class PlayerCharacter : MonoBehaviour {
     {
         if(m_LevitateTargets.Count > 0)
         {
-            m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
-            m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-            m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;
+            if(m_LevitateTarget != null)
+            {
+                m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 1;
+                m_LevitateTarget.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = Color.white;
+                m_LevitateTargets.ElementAt(targetIndex).GetComponent<Rigidbody2D>().constraints
+                        &= ~RigidbodyConstraints2D.FreezePositionY;
+            }
+            else
+            {
+                m_LevitateTargets.Remove(m_LevitateTarget);
+            }                               
 
             try
-            {
-                m_LevitateTargets.ElementAt(targetIndex).GetComponent<Rigidbody2D>().constraints
-                    &= ~RigidbodyConstraints2D.FreezePositionY;
+            {                
                 m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex + 1);                
                 m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
                 m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
@@ -403,12 +393,38 @@ public class PlayerCharacter : MonoBehaviour {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(checkPosition, k_UnderRadius, m_LayerMask);
             foreach (Collider2D collider in colliders)
             {
-                if (collider.gameObject != m_LevitateTarget.gameObject && collider.gameObject.tag == "Liftable")
+                if (collider.gameObject != m_LevitateTarget.gameObject && (collider.gameObject.tag == "Liftable"
+                    || collider.gameObject.tag == "Player"))
                 {                    
                     m_LevitateTarget.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionY
                        | RigidbodyConstraints2D.FreezeRotation;
                 }
             }            
+        }
+    }
+
+    // findLevitateTargets
+    public void findLevitateTargets()
+    {
+        m_LevitateTargets = new LinkedList<GameObject>();
+        targetIndex = 0;
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(
+                                transform.position, m_LevitateRadius, m_LayerMask);
+        for (int i = 0; i < colliders.Length; ++i)
+        {
+            if (colliders[i].gameObject.tag == "Liftable"
+                && !m_LevitateTargets.Contains(colliders[i].gameObject))
+            {
+                m_LevitateTargets.AddLast(colliders[i].gameObject);
+                lastLevitateTime = Time.time;
+            }
+        }
+
+        if (m_LevitateTargets.Count > 0)
+        {
+            m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
+            m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
+            m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
         }
     }
     

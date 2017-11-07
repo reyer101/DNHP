@@ -166,7 +166,8 @@ public class Enemy : MonoBehaviour {
             {                
                 Destroy(gameObject);                
             }
-            
+
+            player.GetComponent<PlayerCharacter>().toggleTarget();                   
             Destroy(other.gameObject);
         }
     }
