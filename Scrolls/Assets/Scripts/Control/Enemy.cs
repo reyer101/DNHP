@@ -151,26 +151,23 @@ public class Enemy : MonoBehaviour {
             if (velocity <= -killVelocity)
             {
                 Debug.Log(other.gameObject.GetComponent<Rigidbody2D>().velocity.y);                
-                Destroy(gameObject);
-                Destroy(other.gameObject);
+                Destroy(gameObject);                
             } 
             else if (velocity <= (.5f * -killVelocity))
-            {
-                Debug.Log("Hitpoints - 2");
-                hitPoints -= 2;
-                Destroy(other.gameObject);
+            {                
+                hitPoints -= 2;                
             } 
             else
-            {
-                Debug.Log("Hitpoints - 1");
-                hitPoints -= 1;
-                Destroy(other.gameObject);
+            {                
+                hitPoints -= 1;                
             }
 
             if (hitPoints <= 0)
             {                
                 Destroy(gameObject);                
             }
+            
+            Destroy(other.gameObject);
         }
     }
 }

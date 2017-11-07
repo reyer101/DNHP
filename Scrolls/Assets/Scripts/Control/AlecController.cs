@@ -49,8 +49,7 @@ public class AlecController : MonoBehaviour {
         }
         
         if(CrossPlatformInputManager.GetButtonDown("ToggleTarget"))
-        {
-            Debug.Log("Y Pressed");
+        {           
             m_Player.toggleTarget();
         }              
 

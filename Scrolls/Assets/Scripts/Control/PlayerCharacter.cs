@@ -103,15 +103,12 @@ public class PlayerCharacter : MonoBehaviour {
         m_LeviateDisabled = false;       
         m_Rigidbody2D.gravityScale = 2;
         checkCanLevitateVert();
-        m_SpellSpawnPosition = transform.Find("SpellSpawner").transform.position;
-
-        Debug.Log("Levitation target: " + m_LevitateTarget);
+        m_SpellSpawnPosition = transform.Find("SpellSpawner").transform.position;       
 
         // Check if player is standing on ground by searching for colliders overlapping radius at bottom of player
         Collider2D[] gColliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_LayerMask);
         for (int i = 0; i < gColliders.Length; i++)
-        {
-            Debug.Log("GroundCollider colliding with: " + gColliders[i].gameObject.name);            
+        {                      
             if (gColliders[i].gameObject != gameObject)  // If a collider besides the one attatched to the player is found
             {                                            // then the player is considerd to be grounded
                 m_Grounded = true;               
@@ -296,17 +293,19 @@ public class PlayerCharacter : MonoBehaviour {
                                 transform.position, m_LevitateRadius, m_LayerMask);
                             for (int i = 0; i < colliders.Length; ++i)
                             {
-                                if (colliders[i].gameObject.tag == "Liftable")
+                                if (colliders[i].gameObject.tag == "Liftable"
+                                    && !m_LevitateTargets.Contains(colliders[i].gameObject))
                                 {                                    
                                     m_LevitateTargets.AddLast(colliders[i].gameObject);                                    
                                     lastLevitateTime = Time.time;
-                                }
-                                if(m_LevitateTargets.Count > 0)
-                                {
-                                    m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
-                                    m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;                                                                                                          
-                                    m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;                                    
-                                }                               
+                                }                                                             
+                            }
+
+                            if (m_LevitateTargets.Count > 0)
+                            {
+                                m_LevitateTarget = m_LevitateTargets.ElementAt(targetIndex);
+                                m_LevitateTarget.GetComponent<Rigidbody2D>().gravityScale = 0;
+                                m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
                             }
                         }
                         else
