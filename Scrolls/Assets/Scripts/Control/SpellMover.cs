@@ -14,11 +14,17 @@ using UnityEngine;
 
 // SpellMover
 public class SpellMover : MonoBehaviour {
-    public float m_MovementSpeed;
+    public float m_MovementSpeed, m_RPM;    
+
+    // Start
+    void Start()
+    {
+        GetComponent<Rigidbody2D>().velocity = new Vector2(m_MovementSpeed, 0);         
+    }
 	
 	// Update 
-	void Update () {
-        transform.position += transform.right * Time.deltaTime * m_MovementSpeed;
+	void Update () {        
+        transform.Rotate(0, 0, -6.0f * m_RPM * Time.deltaTime);
     }
 
     void onTriggerEnter2D(Collider2D other)
