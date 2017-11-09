@@ -21,7 +21,7 @@ public class SpellMover : MonoBehaviour {
     {
         if(!gameObject.tag.Contains("Enemy"))
         {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(m_MovementSpeed, 0);
+            GetComponent<Rigidbody2D>().velocity = transform.right * m_MovementSpeed;
         }                 
     }
 	

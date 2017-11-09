@@ -24,14 +24,16 @@ public class PlayerCharacter : MonoBehaviour {
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
     public int HP;
     public bool m_DropWhenOutOfRange, m_CanLevitateAndMove;    
-    private bool m_Grounded, m_CanClimb, m_HasSpell, m_LeviateDisabled, m_;
+    private bool m_Grounded, m_CanClimb, m_HasSpell, m_LeviateDisabled, m_Crouched;
     private AudioSource m_Audio;
     private Animator m_Animator;  
     private Rigidbody2D m_Rigidbody2D;
+    private BoxCollider2D[] m_Colliders;
     private Transform m_GroundCheck, m_ClimbCheck;
     private CircleCollider2D m_CircleCollider2D;
     private LayerMask m_LayerMask;    
-    private Vector3 m_NormalScale, m_CrouchScale, m_SpellSpawnPosition;
+    private Vector3 m_SpellSpawnPosition;
+    private Vector2 m_NormalSize, m_CrouchSize;
     private Quaternion m_ForwardRotation, m_BackRotation;
     private Color m_Highlight;
     private Text m_SpellText, m_HPText, m_CDText, m_NameText;
@@ -49,8 +51,10 @@ public class PlayerCharacter : MonoBehaviour {
 
     // Awake
     void Awake () {
+        m_Crouched = false;
         m_HasSpell = false;        
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
+        m_Colliders = GetComponents<BoxCollider2D>();
         m_Audio = GetComponent<AudioSource>();
         m_Animator = GetComponent<Animator>();
         m_GroundCheck = transform.Find("GroundCheck");
@@ -64,8 +68,8 @@ public class PlayerCharacter : MonoBehaviour {
         m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();
         ColorUtility.TryParseHtmlString("#c156f7", out m_Highlight);
         m_ClimbCheck = transform.Find("ClimbCheck");
-        m_NormalScale = gameObject.transform.localScale;
-        m_CrouchScale = new Vector3(m_NormalScale[0], m_NormalScale[1] * .667f, m_NormalScale[2]);
+        m_NormalSize = m_Colliders[0].size;
+        m_CrouchSize = new Vector2(m_Colliders[0].size.x, m_Colliders[0].size.y / 2f);
         m_SpellSpawnPosition = transform.Find("SpellSpawner").transform.position;
         m_ForwardRotation = transform.rotation;              
         m_BackRotation = new Quaternion(0, m_ForwardRotation.y - 1, 0, 0);          
@@ -170,6 +174,7 @@ public class PlayerCharacter : MonoBehaviour {
     */
     public void Move(float horizontal, bool jump, bool crouch)
     {
+        m_Crouched = crouch;
         if(m_CanLevitateAndMove || (!m_CanLevitateAndMove && m_LevitateTarget == null))
         {
             m_Rigidbody2D.constraints &= ~RigidbodyConstraints2D.FreezePositionX;
@@ -199,16 +204,31 @@ public class PlayerCharacter : MonoBehaviour {
 
             if (!crouch)
             {
-                m_Rigidbody2D.velocity = new Vector2(horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);                
-                gameObject.transform.localScale = m_NormalScale;
+                // switch to walk animation                
+                m_Animator.runtimeAnimatorController = Resources.Load(
+                    Constants.WalkGirl) as RuntimeAnimatorController;
+                m_Rigidbody2D.velocity = new Vector2(
+                    horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);
+
+                foreach(BoxCollider2D collider in m_Colliders)
+                {
+                    collider.size = m_NormalSize;
+                }                 
             }
             else
             {
+                m_Grounded = false;
+                m_Animator.runtimeAnimatorController = Resources.Load(
+                   Constants.CrouchGirl) as RuntimeAnimatorController;
                 m_Rigidbody2D.velocity = new Vector2(horizontal * m_CrouchSpeed, m_Rigidbody2D.velocity.y);
-                gameObject.transform.localScale = m_CrouchScale;
+                foreach (BoxCollider2D collider in m_Colliders)
+                {
+                    collider.size = m_CrouchSize;
+                }
             }
+        
 
-            if (m_Grounded && jump)
+        if (m_Grounded && jump)
             {
                 m_Grounded = false;
                 m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
@@ -305,6 +325,12 @@ public class PlayerCharacter : MonoBehaviour {
                     break;                 
             }
         }          
+    }
+    
+    // toggleCrouch *   
+    private void toggleCrouch()
+    {
+
     } 
 
     // toggleSpell
