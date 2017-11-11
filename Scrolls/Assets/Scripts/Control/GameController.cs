@@ -24,8 +24,8 @@ public class GameController : MonoBehaviour {
 	// Awake
 	void Awake () {        
         roomOneDone = false;
-        roomTwoDone = false;	
-	}
+        roomTwoDone = false;        
+    }
 	
 	// Update
 	void Update () {

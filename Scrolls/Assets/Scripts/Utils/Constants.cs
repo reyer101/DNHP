@@ -6,7 +6,7 @@ using UnityEngine;
 public class Constants : MonoBehaviour {
     // Audio
     public static string FireSpellAudio = "Audio/FireSpell";
-    public static string EnemySpellAudio = "Audio/EnemySpell";
+    public static string EnemySpellAudio = "Audio/EnemySpell";    
 
     // Animations 
     public static string GirlPrefix = "AnimationControllers/Girl/";

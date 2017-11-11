@@ -40,7 +40,7 @@ public class PlayerCharacter : MonoBehaviour {
     private Image m_Witch, m_Wizard;
 
     private LinkedList<string> m_SpellList;
-    private String m_AnimPrefix = Constants.GirlPrefix;   
+    private String m_AnimPrefix;  
     private int currentSpellIdx, spriteIndex, targetIndex;
     private float lastFireSpellTime, lastLevitateTime, lastToggleTime, lastJumpTime;    
     private float k_GroundedRadius = .5f;   
@@ -94,15 +94,21 @@ public class PlayerCharacter : MonoBehaviour {
             m_HasSpell = true;
         }
 
+        // change sprites and animations based on witch or wizard
         if(PlayerPrefs.GetInt("Sprite") == 0)
         {
             m_Witch.enabled = false;
+            m_AnimPrefix = Constants.BoyPrefix;            
         }
         else
         {
             m_Wizard.enabled = true;
+            m_AnimPrefix = Constants.GirlPrefix;           
         }
-	}
+
+        m_Animator.runtimeAnimatorController = Resources.Load(
+                       m_AnimPrefix + Constants.Walk) as RuntimeAnimatorController;
+    }
 	
 	// FixedUpdate
 	void FixedUpdate () {        
