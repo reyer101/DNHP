@@ -33,15 +33,16 @@ public class PlayerCharacter : MonoBehaviour {
     private CircleCollider2D m_CircleCollider2D;
     private LayerMask m_LayerMask;    
     private Vector3 m_SpellSpawnPosition;
-    private Vector2 m_NormalSize, m_CrouchSize;
+    private Vector2 m_NormalSize, m_CrouchSize, m_CrouchGroundCheck, m_WalkGroundCheck;
     private Quaternion m_ForwardRotation, m_BackRotation;
     private Color m_Highlight;
     private Text m_SpellText, m_HPText, m_CDText, m_NameText;
     private Image m_Witch, m_Wizard;
 
-    private LinkedList<string> m_SpellList;    
+    private LinkedList<string> m_SpellList;
+    private String m_AnimPrefix = Constants.GirlPrefix;   
     private int currentSpellIdx, spriteIndex, targetIndex;
-    private float lastFireSpellTime, lastLevitateTime, lastToggleTime;
+    private float lastFireSpellTime, lastLevitateTime, lastToggleTime, lastJumpTime;    
     private float k_GroundedRadius = .5f;   
     private float k_ClimbRadius = 1.0f;
     private float k_UnderRadius = 1f;
@@ -74,9 +75,12 @@ public class PlayerCharacter : MonoBehaviour {
         m_ForwardRotation = transform.rotation;              
         m_BackRotation = new Quaternion(0, m_ForwardRotation.y - 1, 0, 0);          
         m_LayerMask = -1;
+        m_WalkGroundCheck = m_GroundCheck.localPosition;
+        m_CrouchGroundCheck = new Vector2(m_WalkGroundCheck.x, m_WalkGroundCheck.y + 2f);
         lastFireSpellTime = -100f;
         lastLevitateTime = -100f;
         lastToggleTime = -100f;
+        lastJumpTime = Time.time;
         m_LevitateTargets = new LinkedList<GameObject>();        
         m_SpellList = new LinkedList<string>();              
         currentSpellIdx = 0;
@@ -113,9 +117,11 @@ public class PlayerCharacter : MonoBehaviour {
         Collider2D[] gColliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_LayerMask);
         for (int i = 0; i < gColliders.Length; i++)
         {                      
-            if (gColliders[i].gameObject != gameObject)  // If a collider besides the one attatched to the player is found
-            {                                            // then the player is considerd to be grounded
-                m_Grounded = true;               
+            if (gColliders[i].gameObject != gameObject 
+                && gColliders[i].gameObject.tag != "Checkpoint")  
+            {                
+                m_Grounded = true;
+               
             }                   
         }
 
@@ -203,35 +209,43 @@ public class PlayerCharacter : MonoBehaviour {
             }            
 
             if (!crouch)
-            {
-                // switch to walk animation                
-                m_Animator.runtimeAnimatorController = Resources.Load(
-                    Constants.WalkGirl) as RuntimeAnimatorController;
+            {              
                 m_Rigidbody2D.velocity = new Vector2(
                     horizontal * m_MaxSpeed, m_Rigidbody2D.velocity.y);
+                m_GroundCheck.localPosition = m_WalkGroundCheck;
 
-                foreach(BoxCollider2D collider in m_Colliders)
+                if(m_Grounded && Time.time - lastJumpTime > .1f)
+                {
+                    // switch to walk animation
+                    m_Animator.runtimeAnimatorController = Resources.Load(
+                       m_AnimPrefix + Constants.Walk) as RuntimeAnimatorController;
+                }               
+
+                foreach (BoxCollider2D collider in m_Colliders)
                 {
                     collider.size = m_NormalSize;
                 }                 
             }
             else
-            {
-                m_Grounded = false;
+            {                
                 m_Animator.runtimeAnimatorController = Resources.Load(
-                   Constants.CrouchGirl) as RuntimeAnimatorController;
+                   m_AnimPrefix + Constants.Crouch) as RuntimeAnimatorController;
                 m_Rigidbody2D.velocity = new Vector2(horizontal * m_CrouchSpeed, m_Rigidbody2D.velocity.y);
+                m_GroundCheck.localPosition = m_CrouchGroundCheck;
+
                 foreach (BoxCollider2D collider in m_Colliders)
                 {
                     collider.size = m_CrouchSize;
                 }
-            }
-        
+            }        
 
-        if (m_Grounded && jump)
+            if (m_Grounded && jump && !m_Crouched)
             {
                 m_Grounded = false;
                 m_Rigidbody2D.AddForce(new Vector2(0f, m_JumpForce));
+                lastJumpTime = Time.time;
+                m_Animator.runtimeAnimatorController = Resources.Load(
+                    m_AnimPrefix + Constants.Jump) as RuntimeAnimatorController;                
             }
         }
         else
@@ -325,13 +339,7 @@ public class PlayerCharacter : MonoBehaviour {
                     break;                 
             }
         }          
-    }
-    
-    // toggleCrouch *   
-    private void toggleCrouch()
-    {
-
-    } 
+    }   
 
     // toggleSpell
     public void toggleSpell()

@@ -9,8 +9,9 @@ public class Constants : MonoBehaviour {
     public static string EnemySpellAudio = "Audio/EnemySpell";
 
     // Animations 
-    public static string WalkGirl = 
-        "AnimationControllers/scrolls_girl_player_sprite_1";
-    public static string CrouchGirl =
-        "AnimationControllers/main_girl_crouch_3"; 
+    public static string GirlPrefix = "AnimationControllers/Girl/";
+    public static string BoyPrefix = "AnimationControllers/Boy/";
+    public static string Walk = "main_walk";
+    public static string Crouch = "main_crouch";
+    public static string Jump = "main_jump"; 
 }
