@@ -27,7 +27,7 @@ public class AlecController : MonoBehaviour {
     void Awake () {
         m_Player = GetComponent<PlayerCharacter>();
         m_CrouchCheck = transform.Find("ClimbCheck");
-        m_LayerMask = 1;
+        m_LayerMask = -1;
         m_Crouch = false;                             		
 	}
 	
@@ -60,7 +60,8 @@ public class AlecController : MonoBehaviour {
             for (int i = 0; i < cColliders.Length; i++)
             {                
                 if (cColliders[i].gameObject != gameObject)
-                {                    
+                {
+                    Debug.Log("Crouch collider: " + cColliders[i]);                    
                     m_Crouch = true;
                 }
             }                     

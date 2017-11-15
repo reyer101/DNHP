@@ -19,12 +19,22 @@ public class SpellMover : MonoBehaviour {
     // Start
     void Start()
     {
-        GetComponent<Rigidbody2D>().velocity = new Vector2(m_MovementSpeed, 0);         
+        if(!gameObject.tag.Contains("Enemy"))
+        {
+            GetComponent<Rigidbody2D>().velocity = transform.right * m_MovementSpeed;
+        }                 
     }
 	
 	// Update 
-	void Update () {        
-        transform.Rotate(0, 0, -6.0f * m_RPM * Time.deltaTime);
+	void Update () {
+        if (!gameObject.tag.Contains("Enemy"))
+        {
+            transform.Rotate(0, 0, -6.0f * m_RPM * Time.deltaTime);
+        }
+        else
+        {
+            transform.position += transform.right * Time.deltaTime * m_MovementSpeed;
+        }      
     }
 
     void onTriggerEnter2D(Collider2D other)
