@@ -59,7 +59,7 @@ public class AlecController : MonoBehaviour {
             Collider2D[] cColliders = Physics2D.OverlapCircleAll(m_CrouchCheck.position, k_CrouchRadius, m_LayerMask);
             for (int i = 0; i < cColliders.Length; i++)
             {                
-                if (cColliders[i].gameObject != gameObject)
+                if (cColliders[i].gameObject != gameObject && !cColliders[i].tag.Contains("Checkpoint"))
                 {
                     Debug.Log("Crouch collider: " + cColliders[i]);                    
                     m_Crouch = true;
