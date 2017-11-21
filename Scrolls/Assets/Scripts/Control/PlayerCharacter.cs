@@ -37,7 +37,7 @@ public class PlayerCharacter : MonoBehaviour {
     private Quaternion m_ForwardRotation, m_BackRotation;
     private Color m_Highlight;
     private Text m_SpellText, m_HPText, m_CDText, m_NameText;
-    private Image m_Witch, m_Wizard;
+    private Image m_Witch, m_Wizard, m_CDWheel;
 
     private LinkedList<string> m_SpellList;
     private String m_AnimPrefix;  
@@ -67,6 +67,8 @@ public class PlayerCharacter : MonoBehaviour {
         m_HPText = GameObject.FindGameObjectWithTag("HPText").GetComponent<Text>();
         m_HPText.text = "HP: " + HP;
         m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();
+        m_CDWheel = GameObject.FindGameObjectWithTag(
+            "CDWheel").transform.Find("CooldownBar").GetComponent<Image>();
         ColorUtility.TryParseHtmlString("#c156f7", out m_Highlight);
         m_ClimbCheck = transform.Find("ClimbCheck");
         m_NormalSize = m_Colliders[0].size;
@@ -152,31 +154,27 @@ public class PlayerCharacter : MonoBehaviour {
 
         if (m_HasSpell)
         {
+            float cd = 1;
             switch (m_SpellList.ElementAt(currentSpellIdx))
             {
                 case "Fire":
-                    if (m_FireSpellCD - (Time.time - lastFireSpellTime) >= 0)
+                    m_CDWheel.color = new Color32(0xFF, 0, 0, 0xFF); 
+                    float fireCD = m_FireSpellCD - (Time.time - lastFireSpellTime);
+                    if (fireCD > 0) 
                     {
-                        m_CDText.text = "Spell Cooldown: " + (m_FireSpellCD - (
-                            Time.time - lastFireSpellTime)).ToString("0.0");                        
-                    }
-                    else
-                    {
-                        m_CDText.text = "Spell Cooldown: 0";
-                    }
+                        cd = (m_FireSpellCD - fireCD) / m_FireSpellCD;                        
+                    }                    
                     break;
                 case "Earth":
-                    if (m_LevitateCD - (Time.time - lastLevitateTime) >= 0)
+                    m_CDWheel.color = new Color32(0, 0, 0xFF, 0xFF);
+                    float levCD = m_LevitateCD - (Time.time - lastLevitateTime);
+                    if (levCD > 0)
                     {
-                        m_CDText.text = "Spell Cooldown: " + (m_LevitateCD - (
-                            Time.time - lastLevitateTime)).ToString("0.0");
-                    }
-                    else
-                    {
-                        m_CDText.text = "Spell Cooldown: 0";
-                    }
+                        cd = (m_LevitateCD - levCD) / m_LevitateCD;
+                    }                    
                     break;
             }
+            m_CDWheel.fillAmount = cd;
         }        
     }  
 

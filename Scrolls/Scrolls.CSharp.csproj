@@ -260,6 +260,7 @@
     <Compile Include="Assets\Scripts\CS\LoadScene.cs" />
     <Compile Include="Assets\Scripts\CS\forHUD.cs" />
     <Compile Include="Assets\Scripts\Control\AlecController.cs" />
+    <Compile Include="Assets\Scripts\Control\CDWheelFollow.cs" />
     <Compile Include="Assets\Scripts\Control\Enemy.cs" />
     <Compile Include="Assets\Scripts\Control\GameController.cs" />
     <Compile Include="Assets\Scripts\Control\PlayerCharacter.cs" />
