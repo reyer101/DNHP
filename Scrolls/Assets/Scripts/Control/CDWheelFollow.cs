@@ -18,28 +18,23 @@ public class CDWheelFollow : MonoBehaviour {
     Vector3 initialPosition;
     float baseDiffY, baseDiffX;
 
-    public float followStrength, headOffset, screenXRatio, screenYRatio;  
+    public float followStrengthX, followStrengthY, headOffset;   
 
 	// Awake
 	void Awake () { 
         // 522, 326       
-        /*player = GameObject.FindGameObjectWithTag("Player").transform;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         camera = GameObject.FindGameObjectWithTag("MainCamera").transform;
         initialPosition = transform.position;
         baseDiffY = camera.position.y - player.position.y;
-        baseDiffX = camera.position.x - player.position.x;
-        screenXRatio = Screen.width / 522;
-        screenYRatio = Screen.height / 326;
-        Debug.Log("Screen  height: " + Screen.height);
-        Debug.Log("Screen width: " + Screen.width);*/
-          		
+        baseDiffX = camera.position.x - player.position.x;                 		
 	}
 	
 	// Update
 	void Update () {
-        /*float newDiffX = camera.position.x - player.position.x;
+        float newDiffX = camera.position.x - player.position.x;
         float newDiffY = camera.position.y - player.position.y;        
-        transform.position = new Vector3(screenXRatio * (initialPosition.x - followStrength * newDiffX),
-            screenYRatio * (initialPosition.y + headOffset - followStrength * newDiffY));*/		
+        transform.position = new Vector3((initialPosition.x - followStrengthX * newDiffX),
+            ((initialPosition.y - headOffset) - (followStrengthY * newDiffY)));		
 	}
 }
