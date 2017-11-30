@@ -11,7 +11,7 @@ using UnityEngine.UI;
     ID: 1826582
     Email: reyer101@mail.chapman.edu
     Course: CPSC-344-01
-    Assignment: Beta Milestone
+    Assignment: Gold Milestone
 
     Description: Script for performing actions based on character input.
     */
