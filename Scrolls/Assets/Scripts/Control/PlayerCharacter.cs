@@ -88,7 +88,7 @@ public class PlayerCharacter : MonoBehaviour {
         currentSpellIdx = 0;
         targetIndex = 0;
 
-        if(SceneManager.GetActiveScene().name == "1-1KH")
+        if(true) //SceneManager.GetActiveScene().name == "1-1KH")
         {
             m_SpellList.AddLast("Fire");
             m_SpellList.AddLast("Earth");
