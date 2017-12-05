@@ -17,17 +17,24 @@ Description: Script for controlling boss
 public class BossController : MonoBehaviour {
     GameObject player;
     Animator m_Animator;
-    float lastSpellTime, lastPhaseSwitch, fightTriggerTime;
-    bool hairBallPhase, fightTriggered;    
-    public float m_SpellCD, m_PhaseDuration, m_TransformTime;    
+    float lastSpellTime, lastPhaseSwitch, lastSpawnTime, fightTriggerTime;
+    bool hairBallPhase, fightTriggered;
+    Vector3 minionSpawnPosition;
+
+    public GameObject minion;
+    public float m_SpellCD, m_SpawnCD, m_PhaseDuration, m_TransformTime,
+        m_MinionSpeed;    
 
 	// Awake
 	void Awake () {
         lastSpellTime = -999f;
+        lastSpawnTime = -999f;
         fightTriggerTime = 999f;
         lastPhaseSwitch = 0f;
         hairBallPhase = false;
         fightTriggered = false;
+        minionSpawnPosition = new Vector3(transform.position.x - 10f,
+            transform.position.y - .25f, transform.position.z);
         m_Animator = GetComponent<Animator>();        
         player = GameObject.FindGameObjectWithTag("Player");
     }
@@ -61,7 +68,13 @@ public class BossController : MonoBehaviour {
                 else
                 {
                     // Should spawn minions here
-                    Debug.Log("Not hairball phase");
+                    Debug.Log("Should be spawning minions");
+                    if (Time.time - lastSpawnTime > m_SpawnCD)
+                    {
+                        GameObject minionClone = Instantiate(minion, minionSpawnPosition, transform.rotation);
+                        minionClone.GetComponent<Rigidbody2D>().velocity = new Vector2(-m_MinionSpeed, 0);
+                        lastSpawnTime = Time.time;
+                    }                    
                 }
             }
             else
