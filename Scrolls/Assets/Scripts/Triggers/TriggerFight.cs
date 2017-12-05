@@ -14,6 +14,14 @@ using UnityEngine;
 
 // TriggerFight
 public class TriggerFight : MonoBehaviour {
+    BoxCollider2D barrier;
+    bool triggered = false;
+
+    // Awake
+    void Awake()
+    {
+        barrier = GameObject.FindGameObjectWithTag("Barrier").GetComponent<BoxCollider2D>();
+    }
 
     /*
     Name: OnTriggerEnter2D
@@ -21,11 +29,13 @@ public class TriggerFight : MonoBehaviour {
     */
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.tag == "Player")
+        if(other.gameObject.tag == "Player" && !triggered)
         {
             Debug.Log("Trigger fight");
             GameObject.FindGameObjectWithTag(
                 "Enemy").GetComponent<BossController>().triggerFight();
+            barrier.enabled = true;
+            triggered = true;
         }
     }
 }

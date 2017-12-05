@@ -16,16 +16,19 @@ Description: Script for controlling boss
 // BossController
 public class BossController : MonoBehaviour {
     GameObject player;
-    float lastSpellTime, lastPhaseSwitch;
+    Animator m_Animator;
+    float lastSpellTime, lastPhaseSwitch, fightTriggerTime;
     bool hairBallPhase, fightTriggered;    
-    public float m_SpellCD, m_PhaseDuration;    
+    public float m_SpellCD, m_PhaseDuration, m_TransformTime;    
 
 	// Awake
 	void Awake () {
         lastSpellTime = -999f;
+        fightTriggerTime = 999f;
         lastPhaseSwitch = 0f;
-        hairBallPhase = true;
+        hairBallPhase = false;
         fightTriggered = false;
+        m_Animator = GetComponent<Animator>();        
         player = GameObject.FindGameObjectWithTag("Player");
     }
 	
@@ -34,25 +37,42 @@ public class BossController : MonoBehaviour {
 
         if(fightTriggered)
         {
-            if (Time.time - lastPhaseSwitch > m_PhaseDuration)
+            if(Time.time - fightTriggerTime > m_TransformTime)
             {
-                Debug.Log("Phase switch");
-                hairBallPhase = !hairBallPhase;
-                lastPhaseSwitch = Time.time;
-            }
+                Debug.Log("Animation over");
+                player.GetComponent<AlecController>().setCanMove(true);
+                m_Animator.runtimeAnimatorController = Resources.Load(Constants.Idle)
+                    as RuntimeAnimatorController;
 
-            if (hairBallPhase)
-            {
-                if (Time.time - lastSpellTime > m_SpellCD)
+                if (Time.time - lastPhaseSwitch > m_PhaseDuration)
                 {
-                    Fire();
+                    Debug.Log("Phase switch");
+                    hairBallPhase = !hairBallPhase;
+                    lastPhaseSwitch = Time.time;
+                }
+
+                if (hairBallPhase)
+                {
+                    if (Time.time - lastSpellTime > m_SpellCD)
+                    {
+                        Fire();
+                    }
+                }
+                else
+                {
+                    // Should spawn minions here
+                    Debug.Log("Not hairball phase");
                 }
             }
             else
             {
-                Debug.Log("Not hairball phase");
+                // Kitty is transforming during this time
+                player.GetComponent<AlecController>().setCanMove(false);
+                transform.position = new Vector3(
+                transform.position.x, transform.position.y + Time.deltaTime * 1.15f,
+                transform.position.y);
             }
-        }        
+        }              
 	}
 
     // Fire
@@ -70,6 +90,8 @@ public class BossController : MonoBehaviour {
     public void triggerFight()
     {
         // Do trasnforation anmation here
+        fightTriggerTime = Time.time;
+        m_Animator.enabled = true;
         fightTriggered = true;
     }
 
