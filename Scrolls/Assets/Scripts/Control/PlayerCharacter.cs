@@ -487,26 +487,49 @@ public class PlayerCharacter : MonoBehaviour {
             m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
         }
     }
+
+    // takeDamage
+    void takeDamage()
+    {
+        HP -= 1;
+        m_HPText.text = "HP: " + HP;       
+        if (HP == 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);
+            //respawn at checkpoint
+        }
+    }
     
     // OnTriggerEnter2D
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name.Contains("EnemyProjectile"))
         {
-            HP -= 1;
-            m_HPText.text = "HP: " + HP;
+            takeDamage();
             Destroy(other.gameObject);
-            if (HP == 0)
+        }
+        else if (other.gameObject.name.Contains("Hair"))
+        {
+            Vector2 hairballVelocity = other.gameObject.GetComponent<Rigidbody2D>().velocity;
+            float maxVelocity = Mathf.Max(
+                Mathf.Abs(hairballVelocity.x), Mathf.Abs(hairballVelocity.y));
+            
+            if(maxVelocity > 6f)
             {
-                SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);
-                //respawn at checkpoint
+                takeDamage(); 
+                Destroy(other.gameObject);
             }
+        }
+        else if(other.gameObject.tag == "Ghost")
+        {
+            takeDamage();
+            Destroy(other.gameObject);
         }
         else if (other.gameObject.name == "FireScroll")
         {
             m_HasSpell = true;
             Destroy(other.gameObject);
-            m_SpellList.AddLast("Fire");            
+            m_SpellList.AddLast("Fire");
             m_SpellText.text = "Spell: " + m_SpellList.ElementAt(0);
         }
         else if (other.gameObject.name == "EarthScroll")

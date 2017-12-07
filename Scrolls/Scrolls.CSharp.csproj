@@ -264,6 +264,7 @@
     <Compile Include="Assets\Scripts\Control\CDWheelFollow.cs" />
     <Compile Include="Assets\Scripts\Control\Enemy.cs" />
     <Compile Include="Assets\Scripts\Control\GameController.cs" />
+    <Compile Include="Assets\Scripts\Control\GhostKittyController.cs" />
     <Compile Include="Assets\Scripts\Control\PlayerCharacter.cs" />
     <Compile Include="Assets\Scripts\Control\RightAnalogRotator.cs" />
     <Compile Include="Assets\Scripts\Control\SpellMover.cs" />

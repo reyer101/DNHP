@@ -29,12 +29,11 @@ public class BossController : MonoBehaviour {
 	void Awake () {
         lastSpellTime = -999f;
         lastSpawnTime = -999f;
-        fightTriggerTime = 999f;
-        lastPhaseSwitch = 0f;
-        hairBallPhase = false;
+        fightTriggerTime = 999f;        
+        hairBallPhase = true;
         fightTriggered = false;
         minionSpawnPosition = new Vector3(transform.position.x - 10f,
-            transform.position.y - .25f, transform.position.z);
+            transform.position.y, transform.position.z);
         m_Animator = GetComponent<Animator>();        
         player = GameObject.FindGameObjectWithTag("Player");
     }
@@ -44,7 +43,7 @@ public class BossController : MonoBehaviour {
 
         if(fightTriggered)
         {
-            if(Time.time - fightTriggerTime > m_TransformTime)
+            if(kittyTransformed())
             {
                 Debug.Log("Animation over");
                 player.GetComponent<AlecController>().setCanMove(true);
@@ -55,11 +54,16 @@ public class BossController : MonoBehaviour {
                 {
                     Debug.Log("Phase switch");
                     hairBallPhase = !hairBallPhase;
+
+                    if(hairBallPhase)
+                    {
+                        clearHairballs();
+                    }
                     lastPhaseSwitch = Time.time;
                 }
 
                 if (hairBallPhase)
-                {
+                {                    
                     if (Time.time - lastSpellTime > m_SpellCD)
                     {
                         Fire();
@@ -72,7 +76,7 @@ public class BossController : MonoBehaviour {
                     if (Time.time - lastSpawnTime > m_SpawnCD)
                     {
                         GameObject minionClone = Instantiate(minion, minionSpawnPosition, transform.rotation);
-                        minionClone.GetComponent<Rigidbody2D>().velocity = new Vector2(-m_MinionSpeed, 0);
+                        //minionClone.GetComponent<Rigidbody2D>().velocity = new Vector2(-m_MinionSpeed, 0);
                         lastSpawnTime = Time.time;
                     }                    
                 }
@@ -100,12 +104,30 @@ public class BossController : MonoBehaviour {
         lastSpellTime = Time.time;
     }
 
+    // kittyTransformed
+    bool kittyTransformed()
+    {
+        return Time.time - fightTriggerTime > m_TransformTime;
+    }
+
+    // triggerFight
     public void triggerFight()
     {
         // Do trasnforation anmation here
         fightTriggerTime = Time.time;
+        lastPhaseSwitch = Time.time;
         m_Animator.enabled = true;
         fightTriggered = true;
+    }
+
+    // clearHairballs
+    void clearHairballs()
+    {
+        GameObject[] hairballs = GameObject.FindGameObjectsWithTag("Liftable");
+        foreach(GameObject hairball in hairballs)
+        {
+            Destroy(hairball);
+        }
     }
 
    /*
@@ -117,6 +139,14 @@ public class BossController : MonoBehaviour {
         if(other.gameObject.tag == "Player")
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);            
+        }
+        else if (other.gameObject.name.Contains("Fire"))
+        {           
+            if(kittyTransformed())
+            {
+                // takeDamage
+                Destroy(other.gameObject);
+            }
         }
     }
 }
