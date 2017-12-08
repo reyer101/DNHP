@@ -7,7 +7,7 @@ using UnityEngine;
     ID: 1826582
     Email: reyer101@mail.chapman.edu
     Course: CPSC-344-01
-    Assignment: Beta Milestone
+    Assignment: Alpha Milestone
 
     Description: Script for triggering the Torch object on and off
     */

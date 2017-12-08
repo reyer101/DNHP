@@ -18,7 +18,6 @@ public class LoadScene : MonoBehaviour {
 	public void load() {
 		SceneManager.LoadScene(sceneName);
 	}
-<<<<<<< HEAD
 
 	public void quit(){
 
@@ -28,7 +27,3 @@ public class LoadScene : MonoBehaviour {
 }
 
 
-=======
-}
-
->>>>>>> origin/kj_dev

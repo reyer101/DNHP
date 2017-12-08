@@ -1,16 +1,9 @@
 fileFormatVersion: 2
-<<<<<<< HEAD
 guid: 8d71a60f42518f74882a99eb982d13e0
 timeCreated: 1508615693
 licenseType: Free
 TrueTypeFontImporter:
   externalObjects: {}
-=======
-guid: 4d37eeb56c01a4340beed9d2252ceeae
-timeCreated: 1508714923
-licenseType: Free
-TrueTypeFontImporter:
->>>>>>> origin/kj_dev
   serializedVersion: 4
   fontSize: 16
   forceTextureCase: -2
@@ -20,12 +13,7 @@ TrueTypeFontImporter:
   fontName: High Tower Text
   fontNames:
   - High Tower Text
-<<<<<<< HEAD
   fallbackFontReferences: []
-=======
-  fallbackFontReferences:
-  - {fileID: 12800000, guid: 09a1f3ef0a6738d4a9b3059fbf4409b4, type: 3}
->>>>>>> origin/kj_dev
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
