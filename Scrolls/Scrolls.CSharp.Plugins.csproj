@@ -16,9 +16,14 @@
     <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>GamePlugins:3</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
+<<<<<<< HEAD
     <UnityVersion>2017.2.0f3</UnityVersion>
     <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
+=======
+    <UnityVersion>5.5.4p4</UnityVersion>
+    <RootNamespace></RootNamespace>
+>>>>>>> origin/kj_dev
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -282,6 +287,7 @@
     <None Include="Assets\2D Platformer Controller\LICENSE.txt" />
     <None Include="Assets\2D Platformer Controller\LICENSE02.txt" />
     <None Include="Assets\2D Platformer Controller\Readme.txt" />
+    <None Include="Assets\Cheetah\SampleScenes\Shaders\Skybox-Procedural.shader" />
     <None Include="Assets\Ferr\2D\Scripts\poly2tri.cs\AUTHORS.txt" />
     <None Include="Assets\Ferr\2D\Scripts\poly2tri.cs\LICENSE.txt" />
     <None Include="Assets\Ferr\2DTerrain\Shaders\Ferr2DTCommon.cginc" />

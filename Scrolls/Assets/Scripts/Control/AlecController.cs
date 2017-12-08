@@ -8,7 +8,7 @@ Name: Alec Reyerson
 ID: 1826582
 Email: reyer101@mail.chapman.edu
 Course: CPSC-344-01
-Assignment: Alpha Milestone
+Assignment: Beta Milestone
 
 Description: Script for handling player input
 */
@@ -27,7 +27,7 @@ public class AlecController : MonoBehaviour {
     void Awake () {
         m_Player = GetComponent<PlayerCharacter>();
         m_CrouchCheck = transform.Find("ClimbCheck");
-        m_LayerMask = 1;
+        m_LayerMask = -1;
         m_Crouch = false;                             		
 	}
 	
@@ -47,6 +47,11 @@ public class AlecController : MonoBehaviour {
         {
             m_Player.toggleSpell();
         }
+        
+        if(CrossPlatformInputManager.GetButtonDown("ToggleTarget"))
+        {           
+            m_Player.toggleTarget();
+        }              
 
         if (CrossPlatformInputManager.GetButtonDown("Crouch"))
         {
@@ -55,7 +60,8 @@ public class AlecController : MonoBehaviour {
             for (int i = 0; i < cColliders.Length; i++)
             {                
                 if (cColliders[i].gameObject != gameObject)
-                {                    
+                {
+                    Debug.Log("Crouch collider: " + cColliders[i]);                    
                     m_Crouch = true;
                 }
             }                     
@@ -74,6 +80,6 @@ public class AlecController : MonoBehaviour {
 
         float lh = CrossPlatformInputManager.GetAxis("RightAnalogHori");
         float lv = CrossPlatformInputManager.GetAxis("RightAnalogVert");        
-        m_Player.MoveLevitationTarget(lh, lv);
+        m_Player.MoveLevitationTarget(lh, lv);       
     }
 }

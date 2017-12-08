@@ -338,6 +338,7 @@
     <None Include="Assets\2D Platformer Controller\LICENSE.txt" />
     <None Include="Assets\2D Platformer Controller\LICENSE02.txt" />
     <None Include="Assets\2D Platformer Controller\Readme.txt" />
+    <None Include="Assets\Cheetah\SampleScenes\Shaders\Skybox-Procedural.shader" />
     <None Include="Assets\Ferr\2D\Scripts\poly2tri.cs\AUTHORS.txt" />
     <None Include="Assets\Ferr\2D\Scripts\poly2tri.cs\LICENSE.txt" />
     <None Include="Assets\Ferr\2DTerrain\Shaders\Ferr2DTCommon.cginc" />

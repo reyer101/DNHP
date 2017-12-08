@@ -7,7 +7,7 @@ using UnityEngine;
     ID: 1826582
     Email: reyer101@mail.chapman.edu
     Course: CPSC-344-01
-    Assignment: Alpha Milestone
+    Assignment: Beta Milestone
 
     Description: Script for practicing using input from right analog. Script doesn't do anything in the actual 
     game currently but will most likely be used as a reference in the future for rotating objects w/ right analog.

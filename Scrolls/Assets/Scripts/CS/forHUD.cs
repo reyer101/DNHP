@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+<<<<<<< HEAD
+=======
+//Carissa Smith / Alec Reyerson
+//1800292
+//smith426@mail.chapman.edu
+//CPSC-344-01
+//Scrolls
+//This script's purpose is to load scenes within the game. 
+>>>>>>> origin/kj_dev
 public class forHUD : MonoBehaviour {
 
 	public Toggle wizTog;
@@ -13,6 +22,7 @@ public class forHUD : MonoBehaviour {
 	public int nameIndex;
 	public int spriteIndex;
 
+<<<<<<< HEAD
 	public void getName()
 	{
 		nameIndex = nameSelect.value;
@@ -20,6 +30,28 @@ public class forHUD : MonoBehaviour {
 		
 	}
 
+=======
+    private List<Dropdown.OptionData> choices;    
+
+    // Awake
+    void Awake()
+    {
+        wizTog = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Toggle>();
+        witTog = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Toggle>();
+        nameSelect = GameObject.FindGameObjectWithTag("NameDrop").GetComponent<Dropdown>();
+        choices = nameSelect.options;       
+    }
+
+    // getName
+	public void getName()
+	{
+		nameIndex = nameSelect.value;
+		PlayerPrefs.SetString ("Name", choices[nameIndex].text);
+		
+	}
+
+    // getSprite
+>>>>>>> origin/kj_dev
 	public void getSprite()
 	{
 		if (wizTog.isOn == true) 

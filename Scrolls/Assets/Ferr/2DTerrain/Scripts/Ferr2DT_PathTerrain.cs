@@ -656,7 +656,7 @@ public class Ferr2DT_PathTerrain : MonoBehaviour, Ferr2D_IPath, IBlendPaintable 
             tVerts.Add(new Vector2(start.x, start.y));
         }
 
-		float                           fillDist = (TerrainMaterial.ToUV(TerrainMaterial.GetBody((Ferr2DT_TerrainDirection)0, 0)).width * (TerrainMaterial.edgeMaterial.mainTexture.width / pixelsPerUnit)) / (Mathf.Max(1, splitCount)) * splitDist;
+		//float                           fillDist = (TerrainMaterial.ToUV(TerrainMaterial.GetBody((Ferr2DT_TerrainDirection)0, 0)).width * (TerrainMaterial.edgeMaterial.mainTexture.width / pixelsPerUnit)) / (Mathf.Max(1, splitCount)) * splitDist;
         List<Ferr2DT_TerrainDirection>  dirs     = new List<Ferr2DT_TerrainDirection>();
         List<List<Vector2>>             result   = new List<List<Vector2>           >();
         List<List<int>>                 list     = GetSegments(tVerts, out dirs);
@@ -680,7 +680,7 @@ public class Ferr2DT_PathTerrain : MonoBehaviour, Ferr2D_IPath, IBlendPaintable 
 
                 // smooth it!
                 if (smoothPath && tList.Count > 2) {
-                    Ferr2D_Path.SmoothSegment(tList, tScales, fillDist, false, out tList, out tScales);
+                    //Ferr2D_Path.SmoothSegment(tList, tScales, fillDist, false, out tList, out tScales);
                 }
 
                 // offset the verts based on scale and terrain edge info

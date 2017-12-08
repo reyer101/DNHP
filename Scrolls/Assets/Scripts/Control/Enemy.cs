@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 /*
@@ -7,17 +8,19 @@ using UnityEngine;
     ID: 1826582
     Email: reyer101@mail.chapman.edu
     Course: CPSC-344-01
-    Assignment: Alpha Milestone
+    Assignment: Beta Milestone
 
     Description: Script for enemy behavior
     */
 
 // Enemy
 public class Enemy : MonoBehaviour {
+    public float killVelocity;
     GameObject player;    
     private Vector2 moveDirection;
     private Quaternion fireRotation, forwardRotation, backRotation;
     private GameController gameController;
+    private AudioSource audio;
     private SpriteRenderer sr;
     private LayerMask m_LayerMask;
     private float initialPosition, lastAttackTime;
@@ -33,6 +36,7 @@ public class Enemy : MonoBehaviour {
         backRotation = new Quaternion(0, forwardRotation.y - 1, 0, 0);
         gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         player = GameObject.FindGameObjectWithTag("Player");
+        audio = GetComponent<AudioSource>();
         sr = GetComponent<SpriteRenderer>();
         m_LayerMask = 1;
         moveDirection = Vector2.right;
@@ -109,7 +113,8 @@ public class Enemy : MonoBehaviour {
                 "Spells/EnemyProjectile"), transform.position, transform.rotation);
             spell.transform.localRotation = fireRotation;
             lastAttackTime = Time.time;
-            Debug.Log("Fire rotation: " + fireRotation);
+            audio.clip = (AudioClip)Resources.Load(Constants.EnemySpellAudio);
+            audio.Play();
         }
     }
 
@@ -130,16 +135,44 @@ public class Enemy : MonoBehaviour {
 
     // OnTriggerEnter2D
     void OnTriggerEnter2D(Collider2D other)
-    {
+    {        
         if (other.gameObject.name.Contains("Fire"))
         {
             Destroy(other.gameObject);
             hitPoints -= 1;
             if(hitPoints == 0)
             {
-                gameController.roomTwoDone = true;
+                if (SceneManager.GetActiveScene().name.Contains("Turtorial"))
+                {
+                    gameController.roomTwoDone = true;
+                }                
                 Destroy(gameObject);
             }
+        } 
+        else if (other.gameObject.tag.Equals("Liftable"))
+        {
+            float velocity = other.gameObject.GetComponent<Rigidbody2D>().velocity.y;
+            if (velocity <= -killVelocity)
+            {
+                Debug.Log(other.gameObject.GetComponent<Rigidbody2D>().velocity.y);                
+                Destroy(gameObject);                
+            } 
+            else if (velocity <= (.5f * -killVelocity))
+            {                
+                hitPoints -= 2;                
+            } 
+            else
+            {                
+                hitPoints -= 1;                
+            }
+
+            if (hitPoints <= 0)
+            {                
+                Destroy(gameObject);                
+            }
+
+            player.GetComponent<PlayerCharacter>().toggleTarget();                   
+            Destroy(other.gameObject);
         }
     }
 }

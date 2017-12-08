@@ -1,10 +1,18 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 075c093427970354086a5ef324f7a92c
 folderAsset: yes
 timeCreated: 1511396970
 licenseType: Free
 DefaultImporter:
   externalObjects: {}
+=======
+guid: eb1aa5fd5e79e4afab4f049cf9a80e00
+folderAsset: yes
+timeCreated: 1502311934
+licenseType: Free
+DefaultImporter:
+>>>>>>> origin/kj_dev
   userData: 
   assetBundleName: 
   assetBundleVariant: 

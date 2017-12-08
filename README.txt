@@ -2,7 +2,7 @@ Name: Alec Reyerson
 ID: 1826582
 Email: reyer101@mail.chapman.edu
 Course: CPSC 344-01
-Assignment: Alpha milestone
+Assignment: Beta milestone
 
 Source Files:
 
@@ -13,6 +13,10 @@ Enemy.cs
 GameController.cs
 RightAnalogRotator.cs
 SpellMover.cs
+forHUD.cs
+LoadScene.cs
+Constants.cs
+MusicManager.cs
 
 References:
 
@@ -25,4 +29,3 @@ Run instructions:
 - Run "Scrolls.exe"
 - Choose resolution and graphics settings
 - Play the game
-
