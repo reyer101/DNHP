@@ -25,6 +25,7 @@ public class PlayerCharacter : MonoBehaviour {
     public int HP;
     public bool m_DropWhenOutOfRange, m_CanLevitateAndMove;    
     private bool m_Grounded, m_CanClimb, m_HasSpell, m_LeviateDisabled, m_Crouched;
+    private GameController gameController;
     private AudioSource m_Audio;
     private Animator m_Animator;  
     private Rigidbody2D m_Rigidbody2D;
@@ -40,7 +41,7 @@ public class PlayerCharacter : MonoBehaviour {
     private Image m_Witch, m_Wizard, m_CDWheel;
 
     private LinkedList<string> m_SpellList;
-    private String m_AnimPrefix;  
+    private String m_AnimPrefix, scene;  
     private int currentSpellIdx, spriteIndex, targetIndex;
     private float lastFireSpellTime, lastLevitateTime, lastToggleTime, lastJumpTime;    
     private float k_GroundedRadius = .5f;   
@@ -51,7 +52,7 @@ public class PlayerCharacter : MonoBehaviour {
          
 
     // Awake
-    void Awake () {
+    void Awake () {        
         m_Crouched = false;
         m_HasSpell = false;        
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -59,6 +60,7 @@ public class PlayerCharacter : MonoBehaviour {
         m_Audio = GetComponent<AudioSource>();
         m_Animator = GetComponent<Animator>();
         m_GroundCheck = transform.Find("GroundCheck");
+        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         m_Witch = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Image>();
         m_Wizard = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Image>();
         m_NameText = GameObject.FindGameObjectWithTag("NameText").GetComponent<Text>();
@@ -88,7 +90,7 @@ public class PlayerCharacter : MonoBehaviour {
         currentSpellIdx = 0;
         targetIndex = 0;
 
-        string scene = SceneManager.GetActiveScene().name;
+        scene = SceneManager.GetActiveScene().name;
         Debug.Log("Scene: " + scene);
         if(scene == "Scolls_Tutorial2")
         {
@@ -114,6 +116,18 @@ public class PlayerCharacter : MonoBehaviour {
         {
             m_Wizard.enabled = true;
             m_AnimPrefix = Constants.GirlPrefix;           
+        }
+
+        if(scene == "1-1KH")
+        {
+            if(PlayerPrefs.GetFloat(Constants.CheckpointX, 0) != 0)
+            {
+                gameObject.transform.position = new Vector2(
+                    PlayerPrefs.GetFloat(Constants.CheckpointX),
+                    PlayerPrefs.GetFloat(Constants.CheckpointY));
+                Debug.Log("X: " + PlayerPrefs.GetFloat(Constants.CheckpointX));
+                Debug.Log("Y: " + PlayerPrefs.GetFloat(Constants.CheckpointY));
+            }
         }
 
         m_Animator.runtimeAnimatorController = Resources.Load(
@@ -502,9 +516,8 @@ public class PlayerCharacter : MonoBehaviour {
         HP -= 1;
         m_HPText.text = "HP: " + HP;       
         if (HP == 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);
-            //respawn at checkpoint
+        {            
+            SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);            
         }
     }
     

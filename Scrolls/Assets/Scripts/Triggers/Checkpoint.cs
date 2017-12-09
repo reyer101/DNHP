@@ -21,7 +21,9 @@ public class Checkpoint : MonoBehaviour {
     {
         if(other.tag.Equals("Player"))
         {
-            GameController.currentCheckPoint = gameObject.transform.position;            
+            PlayerPrefs.SetFloat(Constants.CheckpointX, transform.position.x);
+            PlayerPrefs.SetFloat(Constants.CheckpointY, transform.position.y);
+            GameObject.Find("Lamp_On").GetComponent<SpriteRenderer>().enabled = true;            
         }
     }
 }

@@ -24,6 +24,7 @@ public class forHUD : MonoBehaviour {
     // Awake
     void Awake()
     {
+        PlayerPrefs.DeleteAll();
         wizTog = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Toggle>();
         witTog = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Toggle>();
         nameSelect = GameObject.FindGameObjectWithTag("NameDrop").GetComponent<Dropdown>();

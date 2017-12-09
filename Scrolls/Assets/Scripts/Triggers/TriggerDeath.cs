@@ -14,6 +14,13 @@ using UnityEngine;
 
 // TriggerDeath
 public class TriggerDeath : MonoBehaviour {
+    GameController gameController;
+
+    // Start
+    void Start() {
+        gameController = GameObject.FindGameObjectWithTag("GameController")
+            .GetComponent<GameController>();
+    }
 
     /*
    Name: OnTriggerEnter2D
@@ -24,7 +31,7 @@ public class TriggerDeath : MonoBehaviour {
         if(other.gameObject.tag == "Player")
         {
             Debug.Log("Kill player");
-            GameController.KillPlayer();
+            gameController.KillPlayer();
         }
     }
 }

@@ -18,11 +18,13 @@ public class GameController : MonoBehaviour {
     public static Vector2 currentCheckPoint;
     public GameObject barrierOne, barrierTwo;
     public bool roomOneDone, roomTwoDone;
-    private static GameObject player;
+    private GameObject player;
     private Text tutText;    
 
 	// Awake
-	void Awake () {        
+	void Awake () {
+        player = GameObject.FindGameObjectWithTag("Player");
+        currentCheckPoint = player.transform.position;     
         roomOneDone = false;
         roomTwoDone = false;        
     }
@@ -41,10 +43,9 @@ public class GameController : MonoBehaviour {
 	}
 
     // KillPlayer
-    public static IEnumerator KillPlayer()
+    public void KillPlayer()
     {
-        Destroy(player);
-        yield return new WaitForSeconds(2f);
-        player = (GameObject)Instantiate(Resources.Load("Player"), currentCheckPoint, new Quaternion());        
+        Debug.Log("GameController.KillPlayer");
+        //player.transform.position = currentCheckPoint;              
     }
 }

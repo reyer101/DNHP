@@ -22,4 +22,8 @@ public class Constants : MonoBehaviour {
     public static string BossPrefix = AnimationPrefix + "Kitty/";
     public static string Transform = BossPrefix + "kitty_transform";
     public static string Idle = BossPrefix + "kitty_idle";
+
+    // Player Prefs
+    public static string CheckpointX = "checkpointx";
+    public static string CheckpointY = "checkpointy";
 }
