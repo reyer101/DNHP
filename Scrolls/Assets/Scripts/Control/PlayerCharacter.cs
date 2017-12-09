@@ -11,7 +11,7 @@ using UnityEngine.UI;
     ID: 1826582
     Email: reyer101@mail.chapman.edu
     Course: CPSC-344-01
-    Assignment: Beta Milestone
+    Assignment: Gold Milestone
 
     Description: Script for performing actions based on character input.
     */
@@ -59,14 +59,14 @@ public class PlayerCharacter : MonoBehaviour {
         m_Audio = GetComponent<AudioSource>();
         m_Animator = GetComponent<Animator>();
         m_GroundCheck = transform.Find("GroundCheck");
-        m_Witch = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Image>();
+        /*m_Witch = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Image>();
         m_Wizard = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Image>();
         m_NameText = GameObject.FindGameObjectWithTag("NameText").GetComponent<Text>();
         m_NameText.text = PlayerPrefs.GetString("Name");
         m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();       
         m_HPText = GameObject.FindGameObjectWithTag("HPText").GetComponent<Text>();
         m_HPText.text = "HP: " + HP;
-        m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();
+        m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();*/
         ColorUtility.TryParseHtmlString("#c156f7", out m_Highlight);
         m_ClimbCheck = transform.Find("ClimbCheck");
         m_NormalSize = m_Colliders[0].size;
@@ -90,12 +90,12 @@ public class PlayerCharacter : MonoBehaviour {
         {
             m_SpellList.AddLast("Fire");
             m_SpellList.AddLast("Earth");
-            m_SpellText.text = "Spell: Fire";
+            //m_SpellText.text = "Spell: Fire";
             m_HasSpell = true;
         }
 
         // change sprites and animations based on witch or wizard
-        if(PlayerPrefs.GetInt("Sprite") == 0)
+        /*if(PlayerPrefs.GetInt("Sprite") == 0)
         {
             m_Witch.enabled = false;
             m_AnimPrefix = Constants.BoyPrefix;            
@@ -104,8 +104,9 @@ public class PlayerCharacter : MonoBehaviour {
         {
             m_Wizard.enabled = true;
             m_AnimPrefix = Constants.GirlPrefix;           
-        }
+        }*/
 
+        m_AnimPrefix = Constants.BoyPrefix;
         m_Animator.runtimeAnimatorController = Resources.Load(
                        m_AnimPrefix + Constants.Walk) as RuntimeAnimatorController;
     }
@@ -157,23 +158,23 @@ public class PlayerCharacter : MonoBehaviour {
                 case "Fire":
                     if (m_FireSpellCD - (Time.time - lastFireSpellTime) >= 0)
                     {
-                        m_CDText.text = "Spell Cooldown: " + (m_FireSpellCD - (
-                            Time.time - lastFireSpellTime)).ToString("0.0");                        
+                        //m_CDText.text = "Spell Cooldown: " + (m_FireSpellCD - (
+                            //Time.time - lastFireSpellTime)).ToString("0.0");                        
                     }
                     else
                     {
-                        m_CDText.text = "Spell Cooldown: 0";
+                        //m_CDText.text = "Spell Cooldown: 0";
                     }
                     break;
                 case "Earth":
                     if (m_LevitateCD - (Time.time - lastLevitateTime) >= 0)
                     {
-                        m_CDText.text = "Spell Cooldown: " + (m_LevitateCD - (
-                            Time.time - lastLevitateTime)).ToString("0.0");
+                        //m_CDText.text = "Spell Cooldown: " + (m_LevitateCD - (
+                            //Time.time - lastLevitateTime)).ToString("0.0");
                     }
                     else
                     {
-                        m_CDText.text = "Spell Cooldown: 0";
+                       // m_CDText.text = "Spell Cooldown: 0";
                     }
                     break;
             }
@@ -369,7 +370,7 @@ public class PlayerCharacter : MonoBehaviour {
                     targetIndex = 0;
                 }                           
             }
-            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(currentSpellIdx);            
+            //m_SpellText.text = "Spell: " + m_SpellList.ElementAt(currentSpellIdx);            
         }
         lastToggleTime = Time.time;        
     }
@@ -509,13 +510,13 @@ public class PlayerCharacter : MonoBehaviour {
             m_HasSpell = true;
             Destroy(other.gameObject);
             m_SpellList.AddLast("Fire");            
-            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(0);
+            //m_SpellText.text = "Spell: " + m_SpellList.ElementAt(0);
         }
         else if (other.gameObject.name == "EarthScroll")
         {
             Destroy(other.gameObject);
             m_SpellList.AddLast("Earth");
-            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(1);
+            //m_SpellText.text = "Spell: " + m_SpellList.ElementAt(1);
         }
     }  
 }
