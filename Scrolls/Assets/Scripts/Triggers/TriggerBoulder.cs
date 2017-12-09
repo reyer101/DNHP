@@ -14,13 +14,15 @@ using UnityEngine;
 
 // TriggerBoulder
 public class TriggerBoulder : MonoBehaviour {
+    bool triggered = false;
 
     // OnTriggerEnter2D
 	void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.tag == "Player")
+        if(other.tag == "Player" && !triggered)
         {
             GameObject.FindGameObjectWithTag("TutBoulder").GetComponent<Rigidbody2D>().gravityScale = 1;
+            triggered = true;
         }
     }
 }

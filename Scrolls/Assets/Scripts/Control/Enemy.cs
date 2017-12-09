@@ -25,7 +25,8 @@ public class Enemy : MonoBehaviour {
     private LayerMask m_LayerMask;
     private float initialPosition, lastAttackTime;
     private bool playerInRange;
-    public float patrolRadius, playerFollowRadius, moveSpeed, attackCD;   
+    public float patrolRadius, playerFollowRadius, moveSpeed, attackCD;
+    public bool canFire;  
     public int hitPoints;
 
 	// Awake
@@ -73,8 +74,11 @@ public class Enemy : MonoBehaviour {
         }
         else
         {
-            FacePlayer();
-            Attack();
+            if(canFire)
+            {
+                FacePlayer();
+                Attack();
+            }            
         }       
     }
 
@@ -142,20 +146,21 @@ public class Enemy : MonoBehaviour {
             hitPoints -= 1;
             if(hitPoints == 0)
             {
-                if (SceneManager.GetActiveScene().name.Contains("Turtorial"))
+                if (SceneManager.GetActiveScene().name.Contains("Tutorial"))
                 {
                     gameController.roomTwoDone = true;
                 }                
                 Destroy(gameObject);
             }
         } 
-        else if (other.gameObject.tag.Equals("Liftable"))
+        else if (other.gameObject.tag.Equals("Liftable") || 
+            other.gameObject.tag.Contains("Boulder"))
         {
             float velocity = other.gameObject.GetComponent<Rigidbody2D>().velocity.y;
             if (velocity <= -killVelocity)
             {
-                Debug.Log(other.gameObject.GetComponent<Rigidbody2D>().velocity.y);                
-                Destroy(gameObject);                
+                Debug.Log(other.gameObject.GetComponent<Rigidbody2D>().velocity.y);
+                hitPoints = 0;                
             } 
             else if (velocity <= (.5f * -killVelocity))
             {                
@@ -167,7 +172,12 @@ public class Enemy : MonoBehaviour {
             }
 
             if (hitPoints <= 0)
-            {                
+            {
+                if(gameObject.name.Contains("Trigger"))
+                {
+                    GameObject.FindGameObjectWithTag("Checkpoint")
+                        .GetComponent<BoxCollider2D>().enabled = false;
+                }                
                 Destroy(gameObject);                
             }
 

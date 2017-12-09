@@ -88,13 +88,21 @@ public class PlayerCharacter : MonoBehaviour {
         currentSpellIdx = 0;
         targetIndex = 0;
 
-        if(true) //SceneManager.GetActiveScene().name == "1-1KH")
+        string scene = SceneManager.GetActiveScene().name;
+        Debug.Log("Scene: " + scene);
+        if(scene == "Scolls_Tutorial2")
+        {
+            m_SpellList.AddLast("Fire");
+            m_SpellText.text = "Spell: Fire";
+            m_HasSpell = true;
+        } 
+        else if(scene == "1-1KH" || scene == "BossFight")
         {
             m_SpellList.AddLast("Fire");
             m_SpellList.AddLast("Earth");
             m_SpellText.text = "Spell: Fire";
             m_HasSpell = true;
-        }
+        }       
 
         // change sprites and animations based on witch or wizard
         if(PlayerPrefs.GetInt("Sprite") == 0)
@@ -537,6 +545,7 @@ public class PlayerCharacter : MonoBehaviour {
             Destroy(other.gameObject);
             m_SpellList.AddLast("Earth");
             m_SpellText.text = "Spell: " + m_SpellList.ElementAt(1);
+            currentSpellIdx = 1;
         }
     }  
 }
