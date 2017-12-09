@@ -260,8 +260,11 @@
     <Compile Include="Assets\Scripts\CS\LoadScene.cs" />
     <Compile Include="Assets\Scripts\CS\forHUD.cs" />
     <Compile Include="Assets\Scripts\Control\AlecController.cs" />
+    <Compile Include="Assets\Scripts\Control\BossController.cs" />
+    <Compile Include="Assets\Scripts\Control\CDWheelFollow.cs" />
     <Compile Include="Assets\Scripts\Control\Enemy.cs" />
     <Compile Include="Assets\Scripts\Control\GameController.cs" />
+    <Compile Include="Assets\Scripts\Control\GhostKittyController.cs" />
     <Compile Include="Assets\Scripts\Control\PlayerCharacter.cs" />
     <Compile Include="Assets\Scripts\Control\RightAnalogRotator.cs" />
     <Compile Include="Assets\Scripts\Control\SpellMover.cs" />
@@ -270,6 +273,7 @@
     <Compile Include="Assets\Scripts\Triggers\LevitateBlock.cs" />
     <Compile Include="Assets\Scripts\Triggers\TriggerBoulder.cs" />
     <Compile Include="Assets\Scripts\Triggers\TriggerDeath.cs" />
+    <Compile Include="Assets\Scripts\Triggers\TriggerFight.cs" />
     <Compile Include="Assets\Scripts\Triggers\TriggerNextScene.cs" />
     <Compile Include="Assets\Scripts\Utils\Constants.cs" />
     <Compile Include="Assets\Scripts\Utils\MusicManager.cs" />

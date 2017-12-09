@@ -37,7 +37,7 @@ public class PlayerCharacter : MonoBehaviour {
     private Quaternion m_ForwardRotation, m_BackRotation;
     private Color m_Highlight;
     private Text m_SpellText, m_HPText, m_CDText, m_NameText;
-    private Image m_Witch, m_Wizard;
+    private Image m_Witch, m_Wizard, m_CDWheel;
 
     private LinkedList<string> m_SpellList;
     private String m_AnimPrefix;  
@@ -59,14 +59,16 @@ public class PlayerCharacter : MonoBehaviour {
         m_Audio = GetComponent<AudioSource>();
         m_Animator = GetComponent<Animator>();
         m_GroundCheck = transform.Find("GroundCheck");
-        /*m_Witch = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Image>();
+        m_Witch = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Image>();
         m_Wizard = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Image>();
         m_NameText = GameObject.FindGameObjectWithTag("NameText").GetComponent<Text>();
         m_NameText.text = PlayerPrefs.GetString("Name");
         m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();       
         m_HPText = GameObject.FindGameObjectWithTag("HPText").GetComponent<Text>();
         m_HPText.text = "HP: " + HP;
-        m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();*/
+        m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();
+        m_CDWheel = GameObject.FindGameObjectWithTag(
+            "CDWheel").transform.Find("CooldownBar").GetComponent<Image>();
         ColorUtility.TryParseHtmlString("#c156f7", out m_Highlight);
         m_ClimbCheck = transform.Find("ClimbCheck");
         m_NormalSize = m_Colliders[0].size;
@@ -86,16 +88,16 @@ public class PlayerCharacter : MonoBehaviour {
         currentSpellIdx = 0;
         targetIndex = 0;
 
-        if(SceneManager.GetActiveScene().name == "1-1KH")
+        if(true) //SceneManager.GetActiveScene().name == "1-1KH")
         {
             m_SpellList.AddLast("Fire");
             m_SpellList.AddLast("Earth");
-            //m_SpellText.text = "Spell: Fire";
+            m_SpellText.text = "Spell: Fire";
             m_HasSpell = true;
         }
 
         // change sprites and animations based on witch or wizard
-        /*if(PlayerPrefs.GetInt("Sprite") == 0)
+        if(PlayerPrefs.GetInt("Sprite") == 0)
         {
             m_Witch.enabled = false;
             m_AnimPrefix = Constants.BoyPrefix;            
@@ -104,9 +106,8 @@ public class PlayerCharacter : MonoBehaviour {
         {
             m_Wizard.enabled = true;
             m_AnimPrefix = Constants.GirlPrefix;           
-        }*/
+        }
 
-        m_AnimPrefix = Constants.BoyPrefix;
         m_Animator.runtimeAnimatorController = Resources.Load(
                        m_AnimPrefix + Constants.Walk) as RuntimeAnimatorController;
     }
@@ -153,31 +154,27 @@ public class PlayerCharacter : MonoBehaviour {
 
         if (m_HasSpell)
         {
+            float cd = 1;
             switch (m_SpellList.ElementAt(currentSpellIdx))
             {
                 case "Fire":
-                    if (m_FireSpellCD - (Time.time - lastFireSpellTime) >= 0)
+                    m_CDWheel.color = new Color32(0xFF, 0, 0, 0xFF); 
+                    float fireCD = m_FireSpellCD - (Time.time - lastFireSpellTime);
+                    if (fireCD > 0) 
                     {
-                        //m_CDText.text = "Spell Cooldown: " + (m_FireSpellCD - (
-                            //Time.time - lastFireSpellTime)).ToString("0.0");                        
-                    }
-                    else
-                    {
-                        //m_CDText.text = "Spell Cooldown: 0";
-                    }
+                        cd = (m_FireSpellCD - fireCD) / m_FireSpellCD;                        
+                    }                    
                     break;
                 case "Earth":
-                    if (m_LevitateCD - (Time.time - lastLevitateTime) >= 0)
+                    m_CDWheel.color = new Color32(0, 0, 0xFF, 0xFF);
+                    float levCD = m_LevitateCD - (Time.time - lastLevitateTime);
+                    if (levCD > 0)
                     {
-                        //m_CDText.text = "Spell Cooldown: " + (m_LevitateCD - (
-                            //Time.time - lastLevitateTime)).ToString("0.0");
-                    }
-                    else
-                    {
-                       // m_CDText.text = "Spell Cooldown: 0";
-                    }
+                        cd = (m_LevitateCD - levCD) / m_LevitateCD;
+                    }                    
                     break;
             }
+            m_CDWheel.fillAmount = cd;
         }        
     }  
 
@@ -370,7 +367,7 @@ public class PlayerCharacter : MonoBehaviour {
                     targetIndex = 0;
                 }                           
             }
-            //m_SpellText.text = "Spell: " + m_SpellList.ElementAt(currentSpellIdx);            
+            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(currentSpellIdx);            
         }
         lastToggleTime = Time.time;        
     }
@@ -490,33 +487,56 @@ public class PlayerCharacter : MonoBehaviour {
             m_LevitateTarget.GetComponent<SpriteRenderer>().material.color = m_Highlight;
         }
     }
+
+    // takeDamage
+    void takeDamage()
+    {
+        HP -= 1;
+        m_HPText.text = "HP: " + HP;       
+        if (HP == 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);
+            //respawn at checkpoint
+        }
+    }
     
     // OnTriggerEnter2D
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.name.Contains("EnemyProjectile"))
         {
-            HP -= 1;
-            m_HPText.text = "HP: " + HP;
+            takeDamage();
             Destroy(other.gameObject);
-            if (HP == 0)
+        }
+        else if (other.gameObject.name.Contains("Hair"))
+        {
+            Vector2 hairballVelocity = other.gameObject.GetComponent<Rigidbody2D>().velocity;
+            float maxVelocity = Mathf.Max(
+                Mathf.Abs(hairballVelocity.x), Mathf.Abs(hairballVelocity.y));
+            
+            if(maxVelocity > 6f)
             {
-                SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);
-                //respawn at checkpoint
+                takeDamage(); 
+                Destroy(other.gameObject);
             }
+        }
+        else if(other.gameObject.tag == "Ghost")
+        {
+            takeDamage();
+            Destroy(other.gameObject);
         }
         else if (other.gameObject.name == "FireScroll")
         {
             m_HasSpell = true;
             Destroy(other.gameObject);
-            m_SpellList.AddLast("Fire");            
-            //m_SpellText.text = "Spell: " + m_SpellList.ElementAt(0);
+            m_SpellList.AddLast("Fire");
+            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(0);
         }
         else if (other.gameObject.name == "EarthScroll")
         {
             Destroy(other.gameObject);
             m_SpellList.AddLast("Earth");
-            //m_SpellText.text = "Spell: " + m_SpellList.ElementAt(1);
+            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(1);
         }
     }  
 }

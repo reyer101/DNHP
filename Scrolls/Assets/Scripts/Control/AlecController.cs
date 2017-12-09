@@ -19,7 +19,7 @@ public class AlecController : MonoBehaviour {
     private Transform m_CrouchCheck;
     private Vector3 m_CrouchScale, m_NormalScale;
     private LayerMask m_LayerMask;
-    private bool m_Jump, m_Crouch;
+    private bool m_Jump, m_Crouch, m_CanMove;
 
     private float k_CrouchRadius = 1.5f;
 
@@ -28,6 +28,7 @@ public class AlecController : MonoBehaviour {
         m_Player = GetComponent<PlayerCharacter>();
         m_CrouchCheck = transform.Find("ClimbCheck");
         m_LayerMask = -1;
+        m_CanMove = true;
         m_Crouch = false;                             		
 	}
 	
@@ -59,7 +60,7 @@ public class AlecController : MonoBehaviour {
             Collider2D[] cColliders = Physics2D.OverlapCircleAll(m_CrouchCheck.position, k_CrouchRadius, m_LayerMask);
             for (int i = 0; i < cColliders.Length; i++)
             {                
-                if (cColliders[i].gameObject != gameObject)
+                if (cColliders[i].gameObject != gameObject && !cColliders[i].tag.Contains("Checkpoint"))
                 {
                     Debug.Log("Crouch collider: " + cColliders[i]);                    
                     m_Crouch = true;
@@ -71,8 +72,16 @@ public class AlecController : MonoBehaviour {
     // FixedUpdate
     void FixedUpdate()
     {
-        float h = CrossPlatformInputManager.GetAxis("Horizontal");
-        m_Player.Move(h, m_Jump, m_Crouch);
+        if(m_CanMove)
+        {
+            float h = CrossPlatformInputManager.GetAxis("Horizontal");
+            m_Player.Move(h, m_Jump, m_Crouch);            
+        }
+        else
+        {
+            m_Player.Move(0, m_Jump, m_Crouch);            
+        }
+
         m_Jump = false;
 
         float v = CrossPlatformInputManager.GetAxis("Vertical");
@@ -81,5 +90,14 @@ public class AlecController : MonoBehaviour {
         float lh = CrossPlatformInputManager.GetAxis("RightAnalogHori");
         float lv = CrossPlatformInputManager.GetAxis("RightAnalogVert");        
         m_Player.MoveLevitationTarget(lh, lv);       
+    }
+
+    /*
+    Name: setCanMove
+    Parameters: bool canMove
+    */
+    public void setCanMove(bool canMove)
+    {
+        m_CanMove = canMove;
     }
 }

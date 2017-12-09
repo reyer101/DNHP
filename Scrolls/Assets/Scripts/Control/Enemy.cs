@@ -149,17 +149,12 @@ public class Enemy : MonoBehaviour {
                 Destroy(gameObject);
             }
         } 
-        else if (other.gameObject.tag.Equals("Liftable") 
-            || other.gameObject.tag.Contains("Boulder"))
+        else if (other.gameObject.tag.Equals("Liftable"))
         {
             float velocity = other.gameObject.GetComponent<Rigidbody2D>().velocity.y;
             if (velocity <= -killVelocity)
             {
-                if(gameObject.name.Contains("Trigger"))
-                {
-                    GameObject.FindGameObjectWithTag("Checkpoint")
-                        .GetComponent<BoxCollider2D>().enabled = false;
-                }                
+                Debug.Log(other.gameObject.GetComponent<Rigidbody2D>().velocity.y);                
                 Destroy(gameObject);                
             } 
             else if (velocity <= (.5f * -killVelocity))
