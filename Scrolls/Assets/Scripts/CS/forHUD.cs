@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿//Carissa Smith
+//1800292
+//smith426@mail.chapman.edu
+//CPSC-344-01
+//Scrolls
+//This script's purpose is to determine what is displayed in the HUD.
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
