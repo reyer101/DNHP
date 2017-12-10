@@ -18,9 +18,9 @@ Description: Script for controlling boss
 public class BossController : MonoBehaviour {
     GameObject player, hpBar;
     Animator m_Animator; 
-    float lastSpellTime, lastPhaseSwitch, lastSpawnTime, fightTriggerTime;
+    float lastSpellTime, lastPhaseSwitch, lastSpawnTime, fightTriggerTime, kittyDieTime;
     int totalHp;
-    bool hairBallPhase, fightTriggered;
+    bool hairBallPhase, fightTriggered, fightOver;
     Vector3 minionSpawnPosition;
 
     public GameObject minion;
@@ -33,6 +33,7 @@ public class BossController : MonoBehaviour {
         lastSpellTime = -999f;
         lastSpawnTime = -999f;
         fightTriggerTime = 999f;
+        kittyDieTime = 999f;
         totalHp = hp;        
         hairBallPhase = true;
         fightTriggered = false;
@@ -51,41 +52,63 @@ public class BossController : MonoBehaviour {
         {
             if(kittyTransformed())
             {
-                hpBar.SetActive(true);
-                player.GetComponent<AlecController>().setCanMove(true);
-                m_Animator.runtimeAnimatorController = Resources.Load(Constants.Idle)
-                    as RuntimeAnimatorController;
-
-                if (Time.time - lastPhaseSwitch > m_PhaseDuration)
+                if(hp > 0)
                 {
-                    Debug.Log("Phase switch");
-                    hairBallPhase = !hairBallPhase;
+                    hpBar.SetActive(true);
+                    player.GetComponent<AlecController>().setCanMove(true);
+                    m_Animator.runtimeAnimatorController = Resources.Load(Constants.Idle)
+                        as RuntimeAnimatorController;
 
-                    if(hairBallPhase)
+                    if (Time.time - lastPhaseSwitch > m_PhaseDuration)
                     {
-                        clearHairballs();
-                    }
-                    lastPhaseSwitch = Time.time;
-                }
+                        Debug.Log("Phase switch");
+                        hairBallPhase = !hairBallPhase;
 
-                if (hairBallPhase)
-                {                    
-                    if (Time.time - lastSpellTime > m_SpellCD)
-                    {
-                        Fire();
+                        if (hairBallPhase)
+                        {
+                            clearHairballs();
+                        }
+                        lastPhaseSwitch = Time.time;
                     }
+
+                    if (hairBallPhase)
+                    {
+                        if (Time.time - lastSpellTime > m_SpellCD)
+                        {
+                            Fire();
+                        }
+                    }
+                    else
+                    {
+                        // Should spawn minions here
+                        Debug.Log("Should be spawning minions");
+                        if (Time.time - lastSpawnTime > m_SpawnCD)
+                        {
+                            GameObject minionClone = Instantiate(minion, minionSpawnPosition, transform.rotation);
+                            //minionClone.GetComponent<Rigidbody2D>().velocity = new Vector2(-m_MinionSpeed, 0);
+                            lastSpawnTime = Time.time;
+                        }
+                    }
+
                 }
                 else
                 {
-                    // Should spawn minions here
-                    Debug.Log("Should be spawning minions");
-                    if (Time.time - lastSpawnTime > m_SpawnCD)
+                    if(Time.time - kittyDieTime > m_TransformTime)
                     {
-                        GameObject minionClone = Instantiate(minion, minionSpawnPosition, transform.rotation);
-                        //minionClone.GetComponent<Rigidbody2D>().velocity = new Vector2(-m_MinionSpeed, 0);
-                        lastSpawnTime = Time.time;
-                    }                    
-                }
+                        if(!fightOver)
+                        {
+                            fightOver = true;
+                            player.GetComponent<AlecController>().setCanMove(true);
+                            GetComponent<BoxCollider2D>().enabled = false;
+                        }                        
+                    }
+                    else
+                    {
+                        transform.position = new Vector3(
+                            transform.position.x, transform.position.y - Time.deltaTime * 1.15f,
+                            transform.position.y);
+                    }
+                }                                
             }
             else
             {
@@ -143,8 +166,11 @@ public class BossController : MonoBehaviour {
         hp -= 1;
         hpBar.transform.Find("HP").GetComponent<Image>().fillAmount = (float)hp / totalHp;
         if(hp <= 0)
-        {
-            SceneManager.LoadScene(Application.loadedLevel + 1);
+        {            
+            m_Animator.runtimeAnimatorController = Resources.Load(
+                Constants.Return) as RuntimeAnimatorController;
+            kittyDieTime = Time.time;
+            player.GetComponent<AlecController>().setCanMove(false);
         }
     }
 
@@ -160,7 +186,7 @@ public class BossController : MonoBehaviour {
         }
         else if (other.gameObject.name.Contains("Fire"))
         {           
-            if(kittyTransformed())
+            if(kittyTransformed() && hp > 0)
             {                
                 Destroy(other.gameObject);
                 takeDamage();

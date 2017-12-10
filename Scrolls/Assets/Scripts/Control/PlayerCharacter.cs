@@ -121,7 +121,7 @@ public class PlayerCharacter : MonoBehaviour {
         {
             m_Wizard.SetActive(false);
             m_AnimPrefix = Constants.GirlPrefix;           
-        }
+        }        
 
         if(scene == "1-1KH")
         {
