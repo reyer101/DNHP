@@ -23,8 +23,7 @@ public class forHUD : MonoBehaviour {
 
     // Awake
     void Awake()
-    {
-        PlayerPrefs.DeleteAll();
+    {        
         wizTog = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Toggle>();
         witTog = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Toggle>();
         nameSelect = GameObject.FindGameObjectWithTag("NameDrop").GetComponent<Dropdown>();
@@ -36,7 +35,7 @@ public class forHUD : MonoBehaviour {
 	{
 		nameIndex = nameSelect.value;
 		PlayerPrefs.SetString ("Name", choices[nameIndex].text);
-		
+        Debug.Log("Stored name: " + choices[nameIndex].text);		
 	}
 
     // getSprite
@@ -53,5 +52,7 @@ public class forHUD : MonoBehaviour {
 			spriteIndex = 1;
 			PlayerPrefs.SetInt ("Sprite", spriteIndex);
 		}
-	}
+
+        Debug.Log("Sprite Index: " + spriteIndex);
+    }
 }

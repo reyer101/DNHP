@@ -29,7 +29,7 @@ public class BossController : MonoBehaviour {
     public int hp; 
 
 	// Awake
-	void Awake () {
+	void Awake () {        
         lastSpellTime = -999f;
         lastSpawnTime = -999f;
         fightTriggerTime = 999f;

@@ -34,12 +34,12 @@ public class AlecController : MonoBehaviour {
 	
 	// Update
 	void Update () {
-        if (!m_Jump)
+        if (!m_Jump && m_CanMove)
         {
             m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
         }
         
-        if(CrossPlatformInputManager.GetAxis("Spell") == 1)
+        if(CrossPlatformInputManager.GetAxis("Spell") == 1 && m_CanMove)
         {                        
             m_Player.castSpell();
         }
@@ -79,7 +79,7 @@ public class AlecController : MonoBehaviour {
         }
         else
         {
-            m_Player.Move(0, m_Jump, m_Crouch);            
+            m_Player.Move(0, false, m_Crouch);            
         }
 
         m_Jump = false;

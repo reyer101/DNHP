@@ -8,7 +8,7 @@ using UnityEngine;
     ID: 1826582
     Email: reyer101@mail.chapman.edu
     Course: CPSC-344-01
-    Assignment: Beta Milestone
+    Assignment: Gold Milestone
 
     Description: Script for triggering next scene
     */

@@ -18,7 +18,7 @@ using UnityEngine.UI;
 
 // PlayerCharacter
 public class PlayerCharacter : MonoBehaviour {
-    public GameObject m_LevitateTarget;
+    public GameObject m_LevitateTarget, m_Witch, m_Wizard;
     public LinkedList<GameObject> m_LevitateTargets;    
     public float m_MaxSpeed, m_ClimbSpeed, m_CrouchSpeed, m_JumpForce, 
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
@@ -36,8 +36,8 @@ public class PlayerCharacter : MonoBehaviour {
     private Vector2 m_NormalSize, m_CrouchSize, m_CrouchGroundCheck, m_WalkGroundCheck;
     private Quaternion m_ForwardRotation, m_BackRotation;
     private Color m_Highlight;
-    private Text m_SpellText, m_HPText, m_CDText, m_NameText;
-    private Image m_Witch, m_Wizard, m_CDWheel;
+    private Text m_HPText, m_CDText, m_NameText;
+    private Image m_FireIcon, m_LevitationIcon, m_CDWheel;
 
     private LinkedList<string> m_SpellList;
     private String m_AnimPrefix, scene;  
@@ -51,24 +51,24 @@ public class PlayerCharacter : MonoBehaviour {
          
 
     // Awake
-    void Awake () {        
+    void Awake () {            
         m_Crouched = false;
         m_HasSpell = false;        
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
         m_Colliders = GetComponents<BoxCollider2D>();
         m_Audio = GetComponent<AudioSource>();
         m_Animator = GetComponent<Animator>();
-        m_GroundCheck = transform.Find("GroundCheck");        
-        m_Witch = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Image>();
-        m_Wizard = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Image>();
+        m_GroundCheck = transform.Find("GroundCheck");
+        m_Witch = GameObject.FindGameObjectWithTag("WitchToggle");
+        m_Wizard = GameObject.FindGameObjectWithTag("WizardToggle");
         m_NameText = GameObject.FindGameObjectWithTag("NameText").GetComponent<Text>();
-        m_NameText.text = PlayerPrefs.GetString("Name");
-        m_SpellText = GameObject.FindGameObjectWithTag("SpellText").GetComponent<Text>();       
+        m_NameText.text = PlayerPrefs.GetString("Name");               
         m_HPText = GameObject.FindGameObjectWithTag("HPText").GetComponent<Text>();
-        m_HPText.text = "HP: " + HP;
-        m_CDText = GameObject.FindGameObjectWithTag("CDText").GetComponent<Text>();
+        m_HPText.text = "HP: " + HP;        
         m_CDWheel = GameObject.FindGameObjectWithTag(
             "CDWheel").transform.Find("CooldownBar").GetComponent<Image>();
+        m_FireIcon = GameObject.FindGameObjectWithTag("FireIcon").GetComponent<Image>();
+        m_LevitationIcon = GameObject.FindGameObjectWithTag("LevitationIcon").GetComponent<Image>();
         ColorUtility.TryParseHtmlString("#c156f7", out m_Highlight);
         m_ClimbCheck = transform.Find("ClimbCheck");
         m_NormalSize = m_Colliders[0].size;
@@ -86,33 +86,40 @@ public class PlayerCharacter : MonoBehaviour {
         m_LevitateTargets = new LinkedList<GameObject>();        
         m_SpellList = new LinkedList<string>();              
         currentSpellIdx = 0;
-        targetIndex = 0;
+        targetIndex = 0;       
 
         scene = SceneManager.GetActiveScene().name;
         Debug.Log("Scene: " + scene);
         if(scene == "Scolls_Tutorial2")
         {
-            m_SpellList.AddLast("Fire");
-            m_SpellText.text = "Spell: Fire";
+            m_SpellList.AddLast("Fire");            
+            m_LevitationIcon.enabled = false;
             m_HasSpell = true;
         } 
         else if(scene == "1-1KH" || scene == "BossFight")
         {
             m_SpellList.AddLast("Fire");
             m_SpellList.AddLast("Earth");
-            m_SpellText.text = "Spell: Fire";
+            m_FireIcon.enabled = false;
             m_HasSpell = true;
-        }       
+        }
+        else
+        {
+            m_LevitationIcon.enabled = false;
+            m_FireIcon.enabled = false;
+        }
+
+        m_NameText.text = PlayerPrefs.GetString("Name"); 
 
         // change sprites and animations based on witch or wizard
         if(PlayerPrefs.GetInt("Sprite") == 0)
         {
-            m_Witch.enabled = false;
+            m_Witch.SetActive(false);
             m_AnimPrefix = Constants.BoyPrefix;            
         }
         else
         {
-            m_Wizard.enabled = true;
+            m_Wizard.SetActive(false);
             m_AnimPrefix = Constants.GirlPrefix;           
         }
 
@@ -170,7 +177,7 @@ public class PlayerCharacter : MonoBehaviour {
         else
         {            
             m_Animator.speed = 0;
-        }          
+        }       
 
         if (m_HasSpell)
         {
@@ -178,7 +185,9 @@ public class PlayerCharacter : MonoBehaviour {
             switch (m_SpellList.ElementAt(currentSpellIdx))
             {
                 case "Fire":
-                    m_CDWheel.color = new Color32(0xFF, 0, 0, 0xFF); 
+                    m_CDWheel.color = new Color32(0xFF, 0, 0, 0xFF);
+                    m_LevitationIcon.enabled = false;
+                    m_FireIcon.enabled = true;
                     float fireCD = m_FireSpellCD - (Time.time - lastFireSpellTime);
                     if (fireCD > 0) 
                     {
@@ -187,6 +196,8 @@ public class PlayerCharacter : MonoBehaviour {
                     break;
                 case "Earth":
                     m_CDWheel.color = new Color32(0, 0, 0xFF, 0xFF);
+                    m_LevitationIcon.enabled = true;
+                    m_FireIcon.enabled = false;
                     float levCD = m_LevitateCD - (Time.time - lastLevitateTime);
                     if (levCD > 0)
                     {
@@ -386,8 +397,7 @@ public class PlayerCharacter : MonoBehaviour {
                     m_LevitateTargets.Clear();
                     targetIndex = 0;
                 }                           
-            }
-            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(currentSpellIdx);            
+            }            
         }
         lastToggleTime = Time.time;        
     }
@@ -549,13 +559,12 @@ public class PlayerCharacter : MonoBehaviour {
             m_HasSpell = true;
             Destroy(other.gameObject);
             m_SpellList.AddLast("Fire");
-            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(0);
+            currentSpellIdx = 0;            
         }
         else if (other.gameObject.name == "EarthScroll")
         {
             Destroy(other.gameObject);
-            m_SpellList.AddLast("Earth");
-            m_SpellText.text = "Spell: " + m_SpellList.ElementAt(1);
+            m_SpellList.AddLast("Earth");            
             currentSpellIdx = 1;
         }
     }  
