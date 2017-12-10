@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
@@ -15,27 +16,32 @@ Description: Script for controlling boss
 
 // BossController
 public class BossController : MonoBehaviour {
-    GameObject player;
-    Animator m_Animator;
+    GameObject player, hpBar;
+    Animator m_Animator; 
     float lastSpellTime, lastPhaseSwitch, lastSpawnTime, fightTriggerTime;
+    int totalHp;
     bool hairBallPhase, fightTriggered;
     Vector3 minionSpawnPosition;
 
     public GameObject minion;
     public float m_SpellCD, m_SpawnCD, m_PhaseDuration, m_TransformTime,
-        m_MinionSpeed;    
+        m_MinionSpeed;
+    public int hp; 
 
 	// Awake
 	void Awake () {
         lastSpellTime = -999f;
         lastSpawnTime = -999f;
-        fightTriggerTime = 999f;        
+        fightTriggerTime = 999f;
+        totalHp = hp;        
         hairBallPhase = true;
         fightTriggered = false;
         minionSpawnPosition = new Vector3(transform.position.x - 10f,
             transform.position.y, transform.position.z);
         m_Animator = GetComponent<Animator>();        
         player = GameObject.FindGameObjectWithTag("Player");
+        hpBar = GameObject.FindGameObjectWithTag("BossHP");
+        hpBar.SetActive(false);
     }
 	
 	// Update 
@@ -45,7 +51,7 @@ public class BossController : MonoBehaviour {
         {
             if(kittyTransformed())
             {
-                Debug.Log("Animation over");
+                hpBar.SetActive(true);
                 player.GetComponent<AlecController>().setCanMove(true);
                 m_Animator.runtimeAnimatorController = Resources.Load(Constants.Idle)
                     as RuntimeAnimatorController;
@@ -99,8 +105,9 @@ public class BossController : MonoBehaviour {
         Quaternion fireRotation = Quaternion.Euler(new Vector3(0, 0, -angle + 70));
 
         GameObject spell = (GameObject)Instantiate(Resources.Load(
-               "Spells/Hairball"), new Vector3(transform.position.x - 3, transform.position.y, transform.position.z), transform.rotation);
-        spell.transform.localRotation = fireRotation;
+               "Spells/Hairball"), new Vector3(transform.position.x - 4,
+               transform.position.y -1, transform.position.z), transform.rotation);
+               spell.transform.localRotation = fireRotation;
         lastSpellTime = Time.time;
     }
 
@@ -130,6 +137,17 @@ public class BossController : MonoBehaviour {
         }
     }
 
+    // takeDamage
+    void takeDamage()
+    {
+        hp -= 1;
+        hpBar.transform.Find("HP").GetComponent<Image>().fillAmount = (float)hp / totalHp;
+        if(hp <= 0)
+        {
+            SceneManager.LoadScene(Application.loadedLevel + 1);
+        }
+    }
+
    /*
    Name: OnTriggerEnter2D
    Parameters: Collider2D other
@@ -143,9 +161,9 @@ public class BossController : MonoBehaviour {
         else if (other.gameObject.name.Contains("Fire"))
         {           
             if(kittyTransformed())
-            {
-                // takeDamage
+            {                
                 Destroy(other.gameObject);
+                takeDamage();
             }
         }
     }

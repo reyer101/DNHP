@@ -41,7 +41,7 @@ public class GhostKittyController : MonoBehaviour {
                 Mathf.Abs(hairballVelocity.x), Mathf.Abs(hairballVelocity.y));
             Debug.Log("Velocity: " + hairballVelocity);
 
-            if (maxVelocity > 10f)
+            if (maxVelocity > 6f)
             {
                 Destroy(other.gameObject);
                 Destroy(gameObject);                

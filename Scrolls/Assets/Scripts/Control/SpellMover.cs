@@ -39,6 +39,9 @@ public class SpellMover : MonoBehaviour {
 
     void onTriggerEnter2D(Collider2D other)
     {
-        Destroy(gameObject);
+        if(!gameObject.name.Contains("Hair"))
+        {
+            Destroy(gameObject);
+        }        
     }
 }

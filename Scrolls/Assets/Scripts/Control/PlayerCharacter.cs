@@ -24,8 +24,7 @@ public class PlayerCharacter : MonoBehaviour {
         m_FireSpellCD, m_LevitateRadius, m_LevitateSpeed;
     public int HP;
     public bool m_DropWhenOutOfRange, m_CanLevitateAndMove;    
-    private bool m_Grounded, m_CanClimb, m_HasSpell, m_LeviateDisabled, m_Crouched;
-    private GameController gameController;
+    private bool m_Grounded, m_CanClimb, m_HasSpell, m_LeviateDisabled, m_Crouched;    
     private AudioSource m_Audio;
     private Animator m_Animator;  
     private Rigidbody2D m_Rigidbody2D;
@@ -59,8 +58,7 @@ public class PlayerCharacter : MonoBehaviour {
         m_Colliders = GetComponents<BoxCollider2D>();
         m_Audio = GetComponent<AudioSource>();
         m_Animator = GetComponent<Animator>();
-        m_GroundCheck = transform.Find("GroundCheck");
-        gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        m_GroundCheck = transform.Find("GroundCheck");        
         m_Witch = GameObject.FindGameObjectWithTag("WitchToggle").GetComponent<Image>();
         m_Wizard = GameObject.FindGameObjectWithTag("WizardToggle").GetComponent<Image>();
         m_NameText = GameObject.FindGameObjectWithTag("NameText").GetComponent<Text>();
