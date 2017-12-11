@@ -54,7 +54,7 @@ public class AlecController : MonoBehaviour {
             m_Player.toggleTarget();
         }              
 
-        if (CrossPlatformInputManager.GetButtonDown("Crouch"))
+        if (CrossPlatformInputManager.GetButtonDown("Crouch") && m_CanMove)
         {
             m_Crouch = !m_Crouch;
             Collider2D[] cColliders = Physics2D.OverlapCircleAll(m_CrouchCheck.position, k_CrouchRadius, m_LayerMask);

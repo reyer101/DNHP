@@ -27,6 +27,7 @@ public class Constants : MonoBehaviour {
     // Player Prefs
     public static string CheckpointX = "checkpointx";
     public static string CheckpointY = "checkpointy";
+    public static string Scene = "scene";
 
     // Dialogue
     public static string Player = "[Player Name]";

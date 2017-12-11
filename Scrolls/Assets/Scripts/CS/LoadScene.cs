@@ -16,7 +16,34 @@ public class LoadScene : MonoBehaviour {
 
 	//load
 	public void load() {
+        GetComponent<AudioSource>().Play();
+        if(sceneName == "PlayerInfo")
+        {
+            PlayerPrefs.DeleteAll();
+        }
 		SceneManager.LoadScene(sceneName);
 	}
+
+    // Quit
+    public void Quit()
+    {  
+        GetComponent<AudioSource>().Play();      
+        Application.Quit();
+    }
+
+    // Resume
+    public void Resume()
+    {
+        GetComponent<AudioSource>().Play();
+        string savedScene = PlayerPrefs.GetString(Constants.Scene, "");
+        if(savedScene != "")
+        {
+            SceneManager.LoadScene(savedScene);
+        }
+        else
+        {
+            load();
+        }
+    }
 }
 

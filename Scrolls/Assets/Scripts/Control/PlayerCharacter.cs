@@ -51,7 +51,7 @@ public class PlayerCharacter : MonoBehaviour {
          
 
     // Awake
-    void Awake () {            
+    void Awake () {                            
         m_Crouched = false;
         m_HasSpell = false;        
         m_Rigidbody2D = GetComponent<Rigidbody2D>();
@@ -89,6 +89,8 @@ public class PlayerCharacter : MonoBehaviour {
         targetIndex = 0;       
 
         scene = SceneManager.GetActiveScene().name;
+
+        PlayerPrefs.SetString(Constants.Scene, scene);
         Debug.Log("Scene: " + scene);
         if(scene == "Scolls_Tutorial2")
         {
@@ -358,6 +360,8 @@ public class PlayerCharacter : MonoBehaviour {
                     {
                         if(m_LevitateTarget == null)
                         {
+                            m_Audio.clip = (AudioClip)Resources.Load("Audio/Levitate");
+                            m_Audio.Play();
                             findLevitateTargets();                            
                         }
                         else

@@ -10,7 +10,7 @@ using UnityEngine;
     ID: 1826582
     Email: reyer101@mail.chapman.edu
     Course: CPSC-344-01
-    Assignment: Beta Milestone
+    Assignment: Gold Milestone
 
     Description: Script for managing game state and events
     */
@@ -24,19 +24,28 @@ public class GameController : MonoBehaviour {
     GameObject player, dialogueBox;
     Text tutText;
     int currDialogIndex, lastDialogIndex;
-    string name;
+    string name, scene;
     bool showingDialogueBox, triggerNextLevel;        
 
 	// Awake
 	void Awake () {
-        player = GameObject.FindGameObjectWithTag("Player");
+        scene = SceneManager.GetActiveScene().name;
         dialogueBox = GameObject.FindGameObjectWithTag("Dialogue");
         name = PlayerPrefs.GetString("Name");
-        dialogueBox.SetActive(false);
-        currentCheckPoint = player.transform.position;     
+        dialogueBox.SetActive(false);             
         roomOneDone = false;
         roomTwoDone = false;
-        showingDialogueBox = false;      
+        showingDialogueBox = false;
+        
+        if(scene == "EndScene")
+        {
+            showDialogueBox(33, 35, false);
+        }  
+        else
+        {
+            player = GameObject.FindGameObjectWithTag("Player");
+            currentCheckPoint = player.transform.position;
+        }    
     }
 	
 	// Update
@@ -68,22 +77,30 @@ public class GameController : MonoBehaviour {
     public void showDialogueBox(int start, int end, bool nextLevel)
     {
         dialogueBox.SetActive(true);
-        showingDialogueBox = true;
-        player.GetComponent<AlecController>().setCanMove(false);
+        showingDialogueBox = true;       
         currDialogIndex = start;
         lastDialogIndex = end;
         triggerNextLevel = nextLevel;
+
+        if(scene != "EndScene")
+        {
+            player.GetComponent<AlecController>().setCanMove(false);
+        }
     }  
     
     // populateDialogue
     void populateDialogue()
     {
-        dialogueBox.transform.Find("speakerText")
+        try
+        {
+            dialogueBox.transform.Find("speakerText")
             .GetComponent<Text>().text = Constants.Dialogue[currDialogIndex][0]
             .Replace(Constants.Player, name);
-        dialogueBox.transform.Find("dialogueText")
-            .GetComponent<Text>().text = Constants.Dialogue[currDialogIndex][1]
-            .Replace(Constants.Player, name); ;
+            dialogueBox.transform.Find("dialogueText")
+                .GetComponent<Text>().text = Constants.Dialogue[currDialogIndex][1]
+                .Replace(Constants.Player, name);
+
+        } catch (KeyNotFoundException e) { }         
     }
 
     // skipDialogue
@@ -93,7 +110,11 @@ public class GameController : MonoBehaviour {
         if(currDialogIndex > lastDialogIndex)
         {
             dialogueBox.SetActive(false);
-            player.GetComponent<AlecController>().setCanMove(true);
+            if (scene != "EndScene") 
+            {
+                player.GetComponent<AlecController>().setCanMove(true);
+            }
+            
             if(triggerNextLevel)
             {
                 SceneManager.LoadScene(Application.loadedLevel + 1);

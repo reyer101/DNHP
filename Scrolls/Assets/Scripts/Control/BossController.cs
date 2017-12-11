@@ -100,6 +100,8 @@ public class BossController : MonoBehaviour {
                             fightOver = true;
                             player.GetComponent<AlecController>().setCanMove(true);
                             GetComponent<BoxCollider2D>().enabled = false;
+                            GameObject.FindGameObjectWithTag("MusicManager")
+                                .GetComponent<AudioSource>().Stop();
                         }                        
                     }
                     else
