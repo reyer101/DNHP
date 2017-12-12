@@ -39,7 +39,22 @@ public class GameController : MonoBehaviour {
         
         if(scene == "EndScene")
         {
-            showDialogueBox(33, 35, false);
+            showDialogueBox(33, 35, true);
+            SpriteRenderer witchSprite = GameObject.FindGameObjectWithTag(
+                "WitchToggle").GetComponent<SpriteRenderer>();
+            SpriteRenderer wizardSprite = GameObject.FindGameObjectWithTag(
+                "WizardToggle").GetComponent<SpriteRenderer>();
+            
+            if((PlayerPrefs.GetInt("Sprite") != 0))
+            {
+                wizardSprite.enabled = false;
+                witchSprite.enabled = true;                
+            }
+            else
+            {
+                wizardSprite.enabled = true;
+                witchSprite.enabled = false;
+            }
         }  
         else
         {

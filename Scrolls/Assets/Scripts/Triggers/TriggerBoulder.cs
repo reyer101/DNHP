@@ -21,6 +21,7 @@ public class TriggerBoulder : MonoBehaviour {
     {
         if(other.tag == "Player" && !triggered)
         {
+            Debug.Log("Should be triggering boulder");
             GameObject.FindGameObjectWithTag("TutBoulder").GetComponent<Rigidbody2D>().gravityScale = 1;
             triggered = true;
         }
